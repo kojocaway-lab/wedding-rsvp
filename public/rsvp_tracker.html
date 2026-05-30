@@ -1,0 +1,30 @@
+<script>
+
+const params =
+new URLSearchParams(
+  window.location.search
+);
+
+const invitationCode =
+params.get("guest");
+
+async function trackOpen(){
+
+  if(!invitationCode) return;
+
+  await supabase
+    .from('guests')
+    .update({
+      opened_at:
+      new Date()
+    })
+    .eq(
+      'invitation_code',
+      invitationCode
+    );
+
+}
+
+trackOpen();
+
+</script>
