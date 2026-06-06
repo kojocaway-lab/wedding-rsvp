@@ -414,6 +414,7 @@ input, select, textarea, .fi {
 // SUPABASE FUNCTION CONFIG
 // Fill this with your Supabase project functions base URL after deploying the Edge Functions.
 const SUPABASE_FUNCTION_BASE = 'https://skawwvthuqjaegzpcmbp.supabase.co/functions/v1';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrYXd3dnRodXFqYWVnenBjbWJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzA5ODQsImV4cCI6MjA5NTQ0Njk4NH0.Zg2dgdXYMtCeGnJnc9OAvlpgpG_JDMcce05fyDtNj8I';
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 
@@ -443,7 +444,11 @@ function functionUrl(path){
 async function postToFunction(path, payload){
   const res = await fetch(functionUrl(path), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'apikey': SUPABASE_ANON_KEY
+    },
     body: JSON.stringify(payload)
   });
   const data = await res.json().catch(()=>({ ok:false, error:'Invalid server response.' }));

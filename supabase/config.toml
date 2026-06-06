@@ -1,0 +1,7 @@
+project_id = "skawwvthuqjaegzpcmbp"
+
+[functions.wedding-media]
+verify_jwt = false
+
+[functions.wedding-rsvp-submit]
+verify_jwt = false
