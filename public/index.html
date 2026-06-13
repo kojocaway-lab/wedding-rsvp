@@ -121,6 +121,8 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .msg-ok{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--champagne);margin-top:10px;text-shadow:0 1px 8px rgba(0,0,0,0.9);}
 .err-msg{font-family:'Raleway',sans-serif;font-size:10px;letter-spacing:1px;color:#f09090;margin-top:6px;text-shadow:0 1px 4px rgba(0,0,0,0.9);}
 .turnstile-wrap{display:flex;justify-content:center;margin:10px 0 14px;min-height:65px;}
+.fi:disabled{opacity:.62;cursor:not-allowed;}
+.btn:disabled{opacity:.58;cursor:not-allowed;filter:saturate(.75);}
 
 /* ── COUNTDOWN ────────────────────────── */
 .cd-wrap{
@@ -286,7 +288,7 @@ input, select, textarea, .fi {
     <h1>Joseph &amp; Chloe&rsquo; Wedding Celebration</h1>
     <p class="tagline">Please enter your personalised passkey below to access the invitation</p>
     <div class="form-group">
-      <input class="fi" id="invitePassword" type="password" placeholder="Enter passkey" autocomplete="off" onkeydown="if(event.key==='Enter'){checkPassword();}"/>
+      <input class="fi" id="invitePassword" type="password" placeholder="Complete verification first" autocomplete="off" disabled onkeydown="if(event.key==='Enter'){checkPassword();}"/>
     </div>
     <div class="turnstile-wrap">
       <div
@@ -299,7 +301,7 @@ input, select, textarea, .fi {
       ></div>
     </div>
     <div id="passwordErr" class="err-msg" style="display:none;">Incorrect passkey. Please try again.</div>
-    <button class="btn gold" id="enterInvitationBtn" onclick="checkPassword()">Enter Invitation</button>
+    <button class="btn gold" id="enterInvitationBtn" onclick="checkPassword()" disabled>Enter Invitation</button>
   </div>
 </div>
 <div class="page" id="p1">
@@ -483,20 +485,36 @@ function hydrateAssets(assets){
   });
 }
 
+function setPasskeyGate(isUnlocked){
+  const input=document.getElementById('invitePassword');
+  const btn=document.getElementById('enterInvitationBtn');
+  if(input){
+    input.disabled = !isUnlocked;
+    input.placeholder = isUnlocked ? 'Enter passkey' : 'Complete verification first';
+    if(!isUnlocked) input.value = '';
+  }
+  if(btn) btn.disabled = !isUnlocked;
+}
+
 function onTurnstileSuccess(token){
   turnstileToken = token || '';
+  setPasskeyGate(!!turnstileToken);
   const err=document.getElementById('passwordErr');
   if(err && err.textContent === 'Please complete the human verification.'){
     err.style.display='none';
   }
+  const input=document.getElementById('invitePassword');
+  if(input && turnstileToken) input.focus();
 }
 
 function onTurnstileExpired(){
   turnstileToken = '';
+  setPasskeyGate(false);
 }
 
 function resetTurnstile(){
   turnstileToken = '';
+  setPasskeyGate(false);
   if(window.turnstile){
     try{window.turnstile.reset();}catch(e){}
   }
@@ -508,13 +526,14 @@ async function checkPassword(){
   const btn=document.getElementById('enterInvitationBtn');
   const value=input?input.value.trim():'';
   const token = turnstileToken || document.querySelector('[name="cf-turnstile-response"]')?.value || '';
+  if(!token){
+    setPasskeyGate(false);
+    if(err){err.textContent='Please complete the human verification.';err.style.display='block';}
+    return;
+  }
   if(!value){
     if(err){err.textContent='Please enter your passkey.';err.style.display='block';}
     if(input)input.focus();
-    return;
-  }
-  if(!token){
-    if(err){err.textContent='Please complete the human verification.';err.style.display='block';}
     return;
   }
   try{
@@ -536,11 +555,12 @@ async function checkPassword(){
     if(err){err.textContent=e.message || 'Incorrect passkey. Please try again.';err.style.display='block';}
     resetTurnstile();
   }finally{
-    if(btn){btn.disabled=false;btn.textContent='Enter Invitation';}
+    if(btn){btn.disabled=!turnstileToken;btn.textContent='Enter Invitation';}
   }
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  setPasskeyGate(false);
   try{
     const saved = JSON.parse(sessionStorage.getItem('weddingInviteSession') || 'null');
     if(saved && saved.passkey && saved.assets){
