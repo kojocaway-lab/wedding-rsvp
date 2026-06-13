@@ -9,7 +9,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-const BUCKET = 'wedding-rsvp-private'
+const BUCKET = 'wedding_rsvp_private'
 const URL_EXPIRY_SECONDS = 60 * 60 // 1 hour
 
 const PHOTO_PATHS: Record<string, string> = {

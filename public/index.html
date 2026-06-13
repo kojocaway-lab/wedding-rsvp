@@ -207,6 +207,12 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .lightbox.open{opacity:1;pointer-events:all;}
 .lightbox img{max-width:90vw;max-height:88vh;border-radius:10px;object-fit:contain;transform:scale(.93);transition:transform .4s;}
 .lightbox.open img{transform:scale(1);}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.38);color:#fff;font-family:Georgia,serif;font-size:32px;line-height:1;cursor:pointer;z-index:1001;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.lb-prev{left:18px;}
+.lb-next{right:18px;}
+.lb-nav:hover{border-color:var(--champagne);color:var(--champagne);}
+.lb-close{position:absolute;top:18px;right:20px;z-index:1001;cursor:pointer;}
+.lb-caption{position:absolute;bottom:20px;left:18px;right:18px;text-align:center;color:#fff;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;}
 .lb-caption{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,0.55);}
 .lb-close{position:absolute;top:20px;right:24px;font-family:'Raleway',sans-serif;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.45);cursor:pointer;text-transform:uppercase;}
 .lb-close:hover{color:var(--champagne);}
@@ -420,7 +426,9 @@ input, select, textarea, .fi {
 </div>
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <span class="lb-close" onclick="closeLb()">Close</span>
+  <button class="lb-nav lb-prev" type="button" onclick="prevLb(event)" aria-label="Previous photo">&lsaquo;</button>
   <img id="lbImg" src="" alt=""/>
+  <button class="lb-nav lb-next" type="button" onclick="nextLb(event)" aria-label="Next photo">&rsaquo;</button>
   <p class="lb-caption" id="lbCap"></p>
 </div>
 <canvas id="confetti"></canvas>
@@ -821,8 +829,56 @@ const lbData=[
   {key:'gallery_birthday_celebration',cap:'Celebrations'},
   {key:'gallery_winter_in_japan',cap:'Winter in Japan'}
 ];
-function openLb(i){const item=lbData[i];document.getElementById('lbImg').src=inviteAssets[item.key]||'';document.getElementById('lbCap').textContent=item.cap;document.getElementById('lightbox').classList.add('open');}
-function closeLb(e){if(!e||e.target===document.getElementById('lightbox')||e.target.classList.contains('lb-close'))document.getElementById('lightbox').classList.remove('open');}
+let currentLbIndex = 0;
+let lbTouchStartX = 0;
+
+function showLb(i){
+  currentLbIndex = (i + lbData.length) % lbData.length;
+  const item=lbData[currentLbIndex];
+  document.getElementById('lbImg').src=inviteAssets[item.key]||'';
+  document.getElementById('lbCap').textContent=item.cap;
+}
+
+function openLb(i){
+  showLb(i);
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLb(e){
+  if(!e||e.target===document.getElementById('lightbox')||e.target.classList.contains('lb-close')){
+    document.getElementById('lightbox').classList.remove('open');
+  }
+}
+
+function nextLb(e){
+  if(e) e.stopPropagation();
+  showLb(currentLbIndex + 1);
+}
+
+function prevLb(e){
+  if(e) e.stopPropagation();
+  showLb(currentLbIndex - 1);
+}
+
+document.addEventListener('keydown',(e)=>{
+  const lb=document.getElementById('lightbox');
+  if(!lb||!lb.classList.contains('open')) return;
+  if(e.key==='ArrowRight') nextLb(e);
+  if(e.key==='ArrowLeft') prevLb(e);
+  if(e.key==='Escape') closeLb();
+});
+
+document.getElementById('lightbox').addEventListener('touchstart',(e)=>{
+  lbTouchStartX = e.changedTouches&&e.changedTouches[0] ? e.changedTouches[0].clientX : 0;
+},{passive:true});
+
+document.getElementById('lightbox').addEventListener('touchend',(e)=>{
+  const endX = e.changedTouches&&e.changedTouches[0] ? e.changedTouches[0].clientX : lbTouchStartX;
+  const delta = endX - lbTouchStartX;
+  if(Math.abs(delta) < 45) return;
+  if(delta < 0) nextLb(e);
+  if(delta > 0) prevLb(e);
+},{passive:true});
 
 // CONFETTI
 const canvas=document.getElementById('confetti'),ctx=canvas.getContext('2d');
