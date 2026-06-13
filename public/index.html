@@ -458,15 +458,21 @@ function functionUrl(path){
 }
 
 async function postToFunction(path, payload){
-  const res = await fetch(functionUrl(path), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-      'apikey': SUPABASE_ANON_KEY
-    },
-    body: JSON.stringify(payload)
-  });
+  let res;
+  try{
+    res = await fetch(functionUrl(path), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'apikey': SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+  }catch(e){
+    const label = path === RSVP_FUNCTION_PATH ? 'RSVP submission' : 'Invitation access';
+    throw new Error(label + ' service is currently unavailable. Please try again shortly.');
+  }
   const data = await res.json().catch(()=>({ ok:false, error:'Invalid server response.' }));
   if(!res.ok || !data.ok) throw new Error(data.error || 'Unable to complete request.');
   return data;
