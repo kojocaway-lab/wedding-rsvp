@@ -432,6 +432,7 @@ const SUPABASE_FUNCTION_BASE = 'https://skawwvthuqjaegzpcmbp.supabase.co/functio
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrYXd3dnRodXFqYWVnenBjbWJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzA5ODQsImV4cCI6MjA5NTQ0Njk4NH0.Zg2dgdXYMtCeGnJnc9OAvlpgpG_JDMcce05fyDtNj8I';
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
+const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
 
 let inviteSession = null;
 let invitePasskey = '';
@@ -489,6 +490,16 @@ function hydrateAssets(assets){
       if(binding.type === 'image') el.src = url;
     });
   });
+}
+
+function hasFreshSavedAssets(saved){
+  return !!(
+    saved &&
+    saved.passkey &&
+    saved.assets &&
+    saved.savedAt &&
+    Date.now() - saved.savedAt < ASSET_SESSION_TTL_MS
+  );
 }
 
 function setPasskeyGate(isUnlocked){
@@ -553,7 +564,7 @@ async function checkPassword(){
     invitePasskey = value;
     inviteSession = data.session || null;
     hydrateAssets(data.assets);
-    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ passkey:value, session:inviteSession, assets:data.assets }));}catch(e){}
+    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ passkey:value, session:inviteSession, assets:data.assets, savedAt:Date.now() }));}catch(e){}
     if(err)err.style.display='none';
     goTo('p1');
   }catch(e){
@@ -569,11 +580,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   setPasskeyGate(false);
   try{
     const saved = JSON.parse(sessionStorage.getItem('weddingInviteSession') || 'null');
-    if(saved && saved.passkey && saved.assets){
+    if(hasFreshSavedAssets(saved)){
       invitePasskey = saved.passkey;
       inviteSession = saved.session || null;
       hydrateAssets(saved.assets);
       goTo('p1');
+    }else{
+      sessionStorage.removeItem('weddingInviteSession');
     }
   }catch(e){}
 });

@@ -10,18 +10,18 @@ const BUCKET = 'wedding-rsvp-private'
 const URL_EXPIRY_SECONDS = 60 * 60
 
 const PHOTO_PATHS: Record<string, string> = {
-  background_pg1: 'backgrounds/background_pg1.jpeg',
-  background_pg2: 'backgrounds/background_pg2.jpeg',
-  background_pg3: 'backgrounds/background_pg3.jpg',
-  background_pg4: 'backgrounds/background_pg4.jpeg',
-  background_pg5: 'backgrounds/background_pg5.jpeg',
-  background_pg6: 'backgrounds/background_pg6.jpeg',
-  gallery_on_the_slopes: 'gallery/on_the_slopes.jpg',
-  gallery_alpine_adventures: 'gallery/alpine_adventures.jpg',
-  gallery_she_said_yes: 'gallery/she_said_yes.jpg',
-  gallery_concert_night: 'gallery/concert_night.jpg',
-  gallery_birthday_celebration: 'gallery/birthday_celebration.jpg',
-  gallery_winter_in_japan: 'gallery/winter_in_japan.jpg',
+  background_pg1: 'background_rsvp/background_pg1.jpg',
+  background_pg2: 'background_rsvp/background_pg2.png',
+  background_pg3: 'background_rsvp/background_pg3.jpg',
+  background_pg4: 'background_rsvp/background_pg4.jpg',
+  background_pg5: 'background_rsvp/background_pg5.jpg',
+  background_pg6: 'background_rsvp/background_pg6.jpg',
+  gallery_on_the_slopes: 'lightbox_on_the_slopes.jpg',
+  gallery_alpine_adventures: 'lightbox_alpine_adventures.jpg',
+  gallery_she_said_yes: 'lightbox_she_said_yes.jpeg',
+  gallery_concert_night: 'lightbox_concert_night.jpg',
+  gallery_birthday_celebration: 'lightbox_bday_celebration.jpeg',
+  gallery_winter_in_japan: 'lightbox_winter_in_japan.jpg',
 }
 
 function json(body: unknown, status = 200) {
