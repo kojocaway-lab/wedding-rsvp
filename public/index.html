@@ -47,7 +47,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
 h1{font-family:'Tangerine',cursive;font-size:65px;line-height:1.05;color:rgba(247,240,228,0.85);margin-bottom:8px;}
 h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(247,240,228,0.82);margin-bottom:14px;}
 .gallery-title{font-family:'Tangerine',cursive;font-size:28px;color:rgba(247,240,228,0.82);text-align:center;margin-bottom:14px;}
-.itin-title{font-family:'Tangerine',cursive;font-size:38px;color:rgba(247,240,228,0.82);margin-bottom:2px;}
+.itin-title{font-family:'Tangerine',cursive;font-size:38px;color:rgba(247,240,228,0.82);margin:0 0 2px 78px;text-align:left;}
 .final-name{font-family:'Tangerine',cursive;font-size:58px;color:rgba(247,240,228,0.88);margin-bottom:10px;}
 
 /* ── BODY TEXT ────────────────────────── */
@@ -175,7 +175,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .itin-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--champagne);background:#0c0b08;flex-shrink:0;margin-top:5px;position:relative;z-index:1;}
 .itin-info{flex:1;}
 .itin-label{font-family:'Cormorant Garamond',serif;font-size:17px;color:#fff;line-height:1.2;text-shadow:0 1px 10px rgba(0,0,0,1);}
-.itin-venue{font-family:'Raleway',sans-serif;font-weight:300;font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,0.68);margin-top:2px;}
+.itin-venue{font-family:'Raleway',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.5px;color:rgba(255,255,255,0.78);margin-top:2px;}
 
 /* ── GALLERY ───────────────────────────── */
 #p5{overflow:hidden;}
@@ -218,11 +218,12 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .lb-close{position:absolute;top:20px;right:24px;font-family:'Raleway',sans-serif;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.45);cursor:pointer;text-transform:uppercase;}
 .lb-close:hover{color:var(--champagne);}
 
+#p6 .content{margin-top:-68px;}
 #p6 .eyebrow{background:none;border-radius:0;padding:0;backdrop-filter:none;font-family:'Raleway',sans-serif;font-weight:700;
-font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.95);}
-#p6 .final-name{color:rgba(247,240,228,0.92);text-shadow:0 2px 14px rgba(0,0,0,0.95);}
-#p6 .final-sub{font-family:'Raleway',sans-serif;font-style:normal;font-weight:700;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.95);}
-#p6 .ornament{color:var(--champagne);text-shadow:0 2px 10px rgba(0,0,0,0.9);}
+font-size:13px;letter-spacing:5px;color:#080706;text-shadow:0 1px 10px rgba(255,255,255,0.75);}
+#p6 .final-name{color:#080706;text-shadow:0 1px 14px rgba(255,255,255,0.78);}
+#p6 .final-sub{font-family:'Raleway',sans-serif;font-style:normal;font-weight:700;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#080706;text-shadow:0 1px 12px rgba(255,255,255,0.78);}
+#p6 .ornament{color:#3a2a18;text-shadow:0 1px 10px rgba(255,255,255,0.7);}
 
 /* ── RESPONSIVE: scale up on larger screens ── */
 @media(min-width:768px){
@@ -246,7 +247,8 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0
   .final-sub{font-size:clamp(16px,1.6vw,22px);}
   .glass,.gallery-wrap,.content{max-width:580px;}
   #p2 .bg{background-position:center 20%!important;}
-  #p4 .bg{background-size:contain!important;background-repeat:no-repeat;background-position:center center!important;}
+  #p4 .bg{background-size:cover!important;background-repeat:no-repeat;background-position:center 66%!important;}
+  #p4 .content{left:-12vw;}
   .gallery-grid .g-item.tall{height:260px;}
   .gallery-grid .g-item.wide{height:160px;}
   .gallery-grid .g-item.half{height:140px;}
@@ -422,7 +424,7 @@ input, select, textarea, .fi {
 </div>
 <div class="page" id="p6">
   <div class="bg" data-bg-key="background_pg6" style="background-position:center 55%;"></div>
-  <div class="overlay" style="background:linear-gradient(to bottom,rgba(0,0,0,0.28) 0%,rgba(0,0,0,0.18) 45%,rgba(0,0,0,0.62) 100%);"></div>
+  <div class="overlay" style="background:transparent;"></div>
   <div class="content">
     <p class="eyebrow">With love</p>
     <div class="final-name">Joseph &amp; Chloe</div>
