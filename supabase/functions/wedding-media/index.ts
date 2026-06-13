@@ -31,6 +31,28 @@ function json(body: unknown, status = 200) {
   })
 }
 
+async function verifyTurnstile(token: string, remoteIp?: string) {
+  const secret = Deno.env.get('TURNSTILE_SECRET_KEY')
+  if (!secret) throw new Error('Turnstile is not configured.')
+  if (!token) return false
+
+  const body: Record<string, string> = {
+    secret,
+    response: token,
+  }
+  if (remoteIp) body.remoteip = remoteIp
+
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) return false
+  const result = await res.json()
+  return result.success === true
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
   if (req.method !== 'POST') return json({ ok: false, error: 'Method not allowed' }, 405)
@@ -42,8 +64,17 @@ Deno.serve(async (req) => {
   )
 
   try {
-    const { passkey, userAgent, path } = await req.json()
+    const { passkey, turnstileToken, userAgent, path } = await req.json()
     const cleanPasskey = String(passkey || '').trim()
+    const remoteIp =
+      req.headers.get('CF-Connecting-IP') ||
+      req.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
+      undefined
+
+    const humanOk = await verifyTurnstile(String(turnstileToken || ''), remoteIp)
+    if (!humanOk) {
+      return json({ ok: false, error: 'Please complete the human verification.' }, 403)
+    }
 
     const { data: invite } = await supabase
       .from('wedding_invites')

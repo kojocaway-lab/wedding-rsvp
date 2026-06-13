@@ -120,6 +120,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .others-input.show{display:block;}
 .msg-ok{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--champagne);margin-top:10px;text-shadow:0 1px 8px rgba(0,0,0,0.9);}
 .err-msg{font-family:'Raleway',sans-serif;font-size:10px;letter-spacing:1px;color:#f09090;margin-top:6px;text-shadow:0 1px 4px rgba(0,0,0,0.9);}
+.turnstile-wrap{display:flex;justify-content:center;margin:10px 0 14px;min-height:65px;}
 
 /* ── COUNTDOWN ────────────────────────── */
 .cd-wrap{
@@ -272,6 +273,8 @@ input, select, textarea, .fi {
 }
 </style>
 
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <!-- Password landing page -->
@@ -284,6 +287,16 @@ input, select, textarea, .fi {
     <p class="tagline">Please enter your personalised passkey below to access the invitation</p>
     <div class="form-group">
       <input class="fi" id="invitePassword" type="password" placeholder="Enter passkey" autocomplete="off" onkeydown="if(event.key==='Enter'){checkPassword();}"/>
+    </div>
+    <div class="turnstile-wrap">
+      <div
+        class="cf-turnstile"
+        data-sitekey="0x4AAAAAADkDyQrbUy-mFej5"
+        data-theme="dark"
+        data-callback="onTurnstileSuccess"
+        data-expired-callback="onTurnstileExpired"
+        data-error-callback="onTurnstileExpired"
+      ></div>
     </div>
     <div id="passwordErr" class="err-msg" style="display:none;">Incorrect passkey. Please try again.</div>
     <button class="btn gold" id="enterInvitationBtn" onclick="checkPassword()">Enter Invitation</button>
@@ -421,6 +434,7 @@ const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 let inviteSession = null;
 let invitePasskey = '';
 let inviteAssets = {};
+let turnstileToken = '';
 
 const assetBindings = {
   background_pg1: { selector: '[data-bg-key="background_pg1"]', type: 'background' },
@@ -469,20 +483,45 @@ function hydrateAssets(assets){
   });
 }
 
+function onTurnstileSuccess(token){
+  turnstileToken = token || '';
+  const err=document.getElementById('passwordErr');
+  if(err && err.textContent === 'Please complete the human verification.'){
+    err.style.display='none';
+  }
+}
+
+function onTurnstileExpired(){
+  turnstileToken = '';
+}
+
+function resetTurnstile(){
+  turnstileToken = '';
+  if(window.turnstile){
+    try{window.turnstile.reset();}catch(e){}
+  }
+}
+
 async function checkPassword(){
   const input=document.getElementById('invitePassword');
   const err=document.getElementById('passwordErr');
   const btn=document.getElementById('enterInvitationBtn');
   const value=input?input.value.trim():'';
+  const token = turnstileToken || document.querySelector('[name="cf-turnstile-response"]')?.value || '';
   if(!value){
     if(err){err.textContent='Please enter your passkey.';err.style.display='block';}
     if(input)input.focus();
+    return;
+  }
+  if(!token){
+    if(err){err.textContent='Please complete the human verification.';err.style.display='block';}
     return;
   }
   try{
     if(btn){btn.disabled=true;btn.textContent='Loading';}
     const data = await postToFunction(MEDIA_FUNCTION_PATH, {
       passkey: value,
+      turnstileToken: token,
       userAgent: navigator.userAgent,
       path: location.pathname
     });
@@ -495,6 +534,7 @@ async function checkPassword(){
   }catch(e){
     if(input){input.style.borderColor='#e07070';input.focus();}
     if(err){err.textContent=e.message || 'Incorrect passkey. Please try again.';err.style.display='block';}
+    resetTurnstile();
   }finally{
     if(btn){btn.disabled=false;btn.textContent='Enter Invitation';}
   }

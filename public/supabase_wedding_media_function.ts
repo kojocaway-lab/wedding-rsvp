@@ -13,21 +13,24 @@ const BUCKET = 'wedding-rsvp-private'
 const URL_EXPIRY_SECONDS = 60 * 60 // 1 hour
 
 const PHOTO_PATHS: Record<string, string> = {
-  background_pg1: 'backgrounds/background_pg1.jpeg',
-  background_pg2: 'backgrounds/background_pg2.jpeg',
-  background_pg3: 'backgrounds/background_pg3.jpg',
-  background_pg4: 'backgrounds/background_pg4.jpeg',
-  background_pg5: 'backgrounds/background_pg5.jpeg',
-  background_pg6: 'backgrounds/background_pg6.jpeg',
-  gallery_on_the_slopes: 'gallery/on_the_slopes.jpg',
-  gallery_alpine_adventures: 'gallery/alpine_adventures.jpg',
-  gallery_she_said_yes: 'gallery/she_said_yes.jpg',
-  gallery_concert_night: 'gallery/concert_night.jpg',
-  gallery_birthday_celebration: 'gallery/birthday_celebration.jpg',
-  gallery_winter_in_japan: 'gallery/winter_in_japan.jpg',
+  background_pg1: 'background_rsvp/background_pg1.jpg',
+  background_pg2: 'background_rsvp/background_pg2.png',
+  background_pg3: 'background_rsvp/background_pg3.jpg',
+  background_pg4: 'background_rsvp/background_pg4.jpg',
+  background_pg5: 'background_rsvp/background_pg5.jpg',
+  background_pg6: 'background_rsvp/background_pg6.jpg',
+  
+  gallery_alpine_adventures: 'lightbox_alpine_adventures.jpg',
+  gallery_balloon_turkey: 'lightbox_balloon_turkey.jpeg',
+  gallery_birthday_celebration: 'lightbox_bday_celebration.jpeg',
+  gallery_concert_night: 'lightbox_concert_night.jpg',
+  gallery_on_the_slopes: 'lightbox_on_the_slopes.jpg',
+  gallery_she_said_yes: 'lightbox_she_said_yes.jpeg',
+  gallery_shibuya_sky: 'lightbox_shibuya_sky.jpeg',
+  gallery_winter_in_japan: 'lightbox_winter_in_japan.jpg',
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => { // Added Request type definition
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -50,7 +53,6 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Standard default environment variables provided natively by Supabase
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
@@ -70,7 +72,8 @@ Deno.serve(async (req) => {
     }
 
     const assets: Record<string, string> = {}
-    data.forEach((item, index) => {
+    // Added structural typing to item and index parameters below
+    data.forEach((item: { signedUrl: string }, index: number) => {
       if (item.signedUrl) assets[keys[index]] = item.signedUrl
     })
 
@@ -78,7 +81,9 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
-    return new Response(JSON.stringify({ ok: false, error: err?.message || 'Server error' }), {
+    // Safely cast error as any to access the message dynamically
+    const errorDetails = err as any; 
+    return new Response(JSON.stringify({ ok: false, error: errorDetails?.message || 'Server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
