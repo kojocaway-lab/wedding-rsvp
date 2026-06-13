@@ -529,8 +529,6 @@ function hasFreshSavedAssets(saved){
   return !!(
     saved &&
     saved.passkey &&
-    saved.assets &&
-    saved.assetCandidates &&
     saved.savedAt &&
     Date.now() - saved.savedAt < ASSET_SESSION_TTL_MS
   );

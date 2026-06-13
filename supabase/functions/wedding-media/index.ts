@@ -6,81 +6,100 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
-const BUCKET = 'wedding-rsvp-private'
 const URL_EXPIRY_SECONDS = 60 * 60
 
-const PHOTO_PATHS: Record<string, string[]> = {
+type MediaSource = {
+  bucket: string
+  path: string
+}
+
+const PHOTO_PATHS: Record<string, MediaSource[]> = {
   background_pg1: [
-    'background_rsvp/background_pg1.jpg',
-    'backgrounds/background_pg1.jpeg',
-    'backgrounds/background_pg1.jpg',
+    { bucket: 'background_rsvp', path: 'background_pg1.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg1.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg1.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg1.jpg' },
   ],
   background_pg2: [
-    'background_rsvp/background_pg2.png',
-    'background_rsvp/background_pg2.jpg',
-    'backgrounds/background_pg2.jpeg',
-    'backgrounds/background_pg2.jpg',
+    { bucket: 'background_rsvp', path: 'background_pg2.png' },
+    { bucket: 'background_rsvp', path: 'background_pg2.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg2.png' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg2.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg2.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg2.jpg' },
   ],
   background_pg3: [
-    'background_rsvp/background_pg3.jpg',
-    'backgrounds/background_pg3.jpg',
-    'backgrounds/background_pg3.jpeg',
+    { bucket: 'background_rsvp', path: 'background_pg3.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg3.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg3.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg3.jpeg' },
   ],
   background_pg4: [
-    'background_rsvp/background_pg4.jpg',
-    'backgrounds/background_pg4.jpeg',
-    'backgrounds/background_pg4.jpg',
+    { bucket: 'background_rsvp', path: 'background_pg4.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg4.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg4.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg4.jpg' },
   ],
   background_pg5: [
-    'background_rsvp/background_pg5.jpg',
-    'backgrounds/background_pg5.jpeg',
-    'backgrounds/background_pg5.jpg',
+    { bucket: 'background_rsvp', path: 'background_pg5.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg5.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg5.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg5.jpg' },
   ],
   background_pg6: [
-    'background_rsvp/background_pg6.jpg',
-    'backgrounds/background_pg6.jpeg',
-    'backgrounds/background_pg6.jpg',
+    { bucket: 'background_rsvp', path: 'background_pg6.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'background_rsvp/background_pg6.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg6.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'backgrounds/background_pg6.jpg' },
   ],
   gallery_on_the_slopes: [
-    'gallery_rsvp/lightbox_on_the_slopes.jpg',
-    'gallery/on_the_slopes.jpg',
-    'lightbox_on_the_slopes.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_on_the_slopes.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_on_the_slopes.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/on_the_slopes.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_on_the_slopes.jpg' },
   ],
   gallery_alpine_adventures: [
-    'gallery_rsvp/lightbox_alpine_adventures.jpg',
-    'gallery/alpine_adventures.jpg',
-    'lightbox_alpine_adventures.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_alpine_adventures.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_alpine_adventures.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/alpine_adventures.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_alpine_adventures.jpg' },
   ],
   gallery_she_said_yes: [
-    'gallery_rsvp/lightbox_she_said_yes.jpeg',
-    'gallery/she_said_yes.jpg',
-    'lightbox_she_said_yes.jpeg',
-    'lightbox_she_said_yes.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_she_said_yes.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_she_said_yes.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/she_said_yes.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_she_said_yes.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_she_said_yes.jpg' },
   ],
   gallery_concert_night: [
-    'gallery_rsvp/lightbox_concert_night.jpg',
-    'gallery/concert_night.jpg',
-    'lightbox_concert_night.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_concert_night.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_concert_night.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/concert_night.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_concert_night.jpg' },
   ],
   gallery_birthday_celebration: [
-    'gallery_rsvp/lightbox_bday_celebration.jpeg',
-    'gallery/birthday_celebration.jpg',
-    'lightbox_bday_celebration.jpeg',
-    'lightbox_birthday_celebration.jpeg',
-    'lightbox_birthday_celebration.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_bday_celebration.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_bday_celebration.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/birthday_celebration.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_bday_celebration.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_birthday_celebration.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_birthday_celebration.jpg' },
   ],
   gallery_winter_in_japan: [
-    'gallery_rsvp/lightbox_winter_in_japan.jpg',
-    'gallery/winter_in_japan.jpg',
-    'lightbox_winter_in_japan.jpg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_winter_in_japan.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_winter_in_japan.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery/winter_in_japan.jpg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_winter_in_japan.jpg' },
   ],
   gallery_balloon_turkey: [
-    'gallery_rsvp/lightbox_balloon_turkey.jpeg',
-    'lightbox_balloon_turkey.jpeg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_balloon_turkey.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_balloon_turkey.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_balloon_turkey.jpeg' },
   ],
   gallery_shibuya_sky: [
-    'gallery_rsvp/lightbox_shibuya_sky.jpeg',
-    'lightbox_shibuya_sky.jpeg',
+    { bucket: 'gallery_rsvp', path: 'lightbox_shibuya_sky.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'gallery_rsvp/lightbox_shibuya_sky.jpeg' },
+    { bucket: 'wedding-rsvp-private', path: 'lightbox_shibuya_sky.jpeg' },
   ],
 }
 
@@ -111,22 +130,6 @@ async function verifyTurnstile(token: string, remoteIp?: string) {
   if (!res.ok) return false
   const result = await res.json()
   return result.success === true
-}
-
-async function listExistingStoragePaths(supabase: ReturnType<typeof createClient>) {
-  const folders = ['', 'background_rsvp', 'backgrounds', 'gallery_rsvp', 'gallery']
-  const existing = new Set<string>()
-
-  await Promise.all(folders.map(async (folder) => {
-    const { data } = await supabase.storage.from(BUCKET).list(folder, { limit: 1000 })
-    if (!data) return
-    data.forEach((item) => {
-      const path = folder ? `${folder}/${item.name}` : item.name
-      existing.add(path)
-    })
-  }))
-
-  return existing
 }
 
 Deno.serve(async (req) => {
@@ -185,33 +188,20 @@ Deno.serve(async (req) => {
       page_path: path || null,
     })
 
-    const existingPaths = await listExistingStoragePaths(supabase)
-    const keys = Object.keys(PHOTO_PATHS)
-    const signedUrlKeys: string[] = []
-    const paths = keys.flatMap((key) => {
-      const existingCandidates = PHOTO_PATHS[key].filter((path) => existingPaths.has(path))
-      signedUrlKeys.push(...existingCandidates.map(() => key))
-      return existingCandidates
-    })
-
-    if (!paths.length) {
-      throw new Error('No wedding media files were found in Supabase Storage.')
-    }
-    const { data, error } = await supabase.storage
-      .from(BUCKET)
-      .createSignedUrls(paths, URL_EXPIRY_SECONDS)
-
-    if (error || !data) throw error || new Error('Unable to create signed URLs')
-
     const assets: Record<string, string> = {}
     const assetCandidates: Record<string, string[]> = {}
-    data.forEach((item, index) => {
-      const key = signedUrlKeys[index]
-      if (!item.signedUrl || !key) return
-      assetCandidates[key] = assetCandidates[key] || []
-      assetCandidates[key].push(item.signedUrl)
-      if (!assets[key]) assets[key] = item.signedUrl
-    })
+    await Promise.all(Object.entries(PHOTO_PATHS).map(async ([key, sources]) => {
+      await Promise.all(sources.map(async (source) => {
+        const { data, error } = await supabase.storage
+          .from(source.bucket)
+          .createSignedUrl(source.path, URL_EXPIRY_SECONDS)
+
+        if (error || !data?.signedUrl) return
+        assetCandidates[key] = assetCandidates[key] || []
+        assetCandidates[key].push(data.signedUrl)
+        if (!assets[key]) assets[key] = data.signedUrl
+      }))
+    }))
 
     return json({
       ok: true,
@@ -219,6 +209,7 @@ Deno.serve(async (req) => {
       invite: { guestLabel: invite.guest_label, maxGuests: invite.max_guests },
       assets,
       assetCandidates,
+      mediaWarning: Object.keys(assets).length ? null : 'No wedding media files could be loaded.',
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Server error'
