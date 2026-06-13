@@ -42,31 +42,45 @@ const PHOTO_PATHS: Record<string, string[]> = {
     'backgrounds/background_pg6.jpg',
   ],
   gallery_on_the_slopes: [
-    'lightbox_on_the_slopes.jpg',
+    'gallery_rsvp/lightbox_on_the_slopes.jpg',
     'gallery/on_the_slopes.jpg',
+    'lightbox_on_the_slopes.jpg',
   ],
   gallery_alpine_adventures: [
-    'lightbox_alpine_adventures.jpg',
+    'gallery_rsvp/lightbox_alpine_adventures.jpg',
     'gallery/alpine_adventures.jpg',
+    'lightbox_alpine_adventures.jpg',
   ],
   gallery_she_said_yes: [
+    'gallery_rsvp/lightbox_she_said_yes.jpeg',
+    'gallery/she_said_yes.jpg',
     'lightbox_she_said_yes.jpeg',
     'lightbox_she_said_yes.jpg',
-    'gallery/she_said_yes.jpg',
   ],
   gallery_concert_night: [
-    'lightbox_concert_night.jpg',
+    'gallery_rsvp/lightbox_concert_night.jpg',
     'gallery/concert_night.jpg',
+    'lightbox_concert_night.jpg',
   ],
   gallery_birthday_celebration: [
+    'gallery_rsvp/lightbox_bday_celebration.jpeg',
+    'gallery/birthday_celebration.jpg',
     'lightbox_bday_celebration.jpeg',
     'lightbox_birthday_celebration.jpeg',
     'lightbox_birthday_celebration.jpg',
-    'gallery/birthday_celebration.jpg',
   ],
   gallery_winter_in_japan: [
-    'lightbox_winter_in_japan.jpg',
+    'gallery_rsvp/lightbox_winter_in_japan.jpg',
     'gallery/winter_in_japan.jpg',
+    'lightbox_winter_in_japan.jpg',
+  ],
+  gallery_balloon_turkey: [
+    'gallery_rsvp/lightbox_balloon_turkey.jpeg',
+    'lightbox_balloon_turkey.jpeg',
+  ],
+  gallery_shibuya_sky: [
+    'gallery_rsvp/lightbox_shibuya_sky.jpeg',
+    'lightbox_shibuya_sky.jpeg',
   ],
 }
 
@@ -100,7 +114,7 @@ async function verifyTurnstile(token: string, remoteIp?: string) {
 }
 
 async function listExistingStoragePaths(supabase: ReturnType<typeof createClient>) {
-  const folders = ['', 'background_rsvp', 'backgrounds', 'gallery']
+  const folders = ['', 'background_rsvp', 'backgrounds', 'gallery_rsvp', 'gallery']
   const existing = new Set<string>()
 
   await Promise.all(folders.map(async (folder) => {

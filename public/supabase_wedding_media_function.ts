@@ -20,14 +20,14 @@ const PHOTO_PATHS: Record<string, string> = {
   background_pg5: 'background_rsvp/background_pg5.jpg',
   background_pg6: 'background_rsvp/background_pg6.jpg',
   
-  gallery_alpine_adventures: 'lightbox_alpine_adventures.jpg',
-  gallery_balloon_turkey: 'lightbox_balloon_turkey.jpeg',
-  gallery_birthday_celebration: 'lightbox_bday_celebration.jpeg',
-  gallery_concert_night: 'lightbox_concert_night.jpg',
-  gallery_on_the_slopes: 'lightbox_on_the_slopes.jpg',
-  gallery_she_said_yes: 'lightbox_she_said_yes.jpeg',
-  gallery_shibuya_sky: 'lightbox_shibuya_sky.jpeg',
-  gallery_winter_in_japan: 'lightbox_winter_in_japan.jpg',
+  gallery_alpine_adventures: 'gallery_rsvp/lightbox_alpine_adventures.jpg',
+  gallery_balloon_turkey: 'gallery_rsvp/lightbox_balloon_turkey.jpeg',
+  gallery_birthday_celebration: 'gallery_rsvp/lightbox_bday_celebration.jpeg',
+  gallery_concert_night: 'gallery_rsvp/lightbox_concert_night.jpg',
+  gallery_on_the_slopes: 'gallery_rsvp/lightbox_on_the_slopes.jpg',
+  gallery_she_said_yes: 'gallery_rsvp/lightbox_she_said_yes.jpeg',
+  gallery_shibuya_sky: 'gallery_rsvp/lightbox_shibuya_sky.jpeg',
+  gallery_winter_in_japan: 'gallery_rsvp/lightbox_winter_in_japan.jpg',
 }
 
 Deno.serve(async (req: Request) => { // Added Request type definition
