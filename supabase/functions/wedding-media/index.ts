@@ -9,19 +9,65 @@ const corsHeaders = {
 const BUCKET = 'wedding-rsvp-private'
 const URL_EXPIRY_SECONDS = 60 * 60
 
-const PHOTO_PATHS: Record<string, string> = {
-  background_pg1: 'background_rsvp/background_pg1.jpg',
-  background_pg2: 'background_rsvp/background_pg2.png',
-  background_pg3: 'background_rsvp/background_pg3.jpg',
-  background_pg4: 'background_rsvp/background_pg4.jpg',
-  background_pg5: 'background_rsvp/background_pg5.jpg',
-  background_pg6: 'background_rsvp/background_pg6.jpg',
-  gallery_on_the_slopes: 'lightbox_on_the_slopes.jpg',
-  gallery_alpine_adventures: 'lightbox_alpine_adventures.jpg',
-  gallery_she_said_yes: 'lightbox_she_said_yes.jpeg',
-  gallery_concert_night: 'lightbox_concert_night.jpg',
-  gallery_birthday_celebration: 'lightbox_bday_celebration.jpeg',
-  gallery_winter_in_japan: 'lightbox_winter_in_japan.jpg',
+const PHOTO_PATHS: Record<string, string[]> = {
+  background_pg1: [
+    'background_rsvp/background_pg1.jpg',
+    'backgrounds/background_pg1.jpeg',
+    'backgrounds/background_pg1.jpg',
+  ],
+  background_pg2: [
+    'background_rsvp/background_pg2.png',
+    'background_rsvp/background_pg2.jpg',
+    'backgrounds/background_pg2.jpeg',
+    'backgrounds/background_pg2.jpg',
+  ],
+  background_pg3: [
+    'background_rsvp/background_pg3.jpg',
+    'backgrounds/background_pg3.jpg',
+    'backgrounds/background_pg3.jpeg',
+  ],
+  background_pg4: [
+    'background_rsvp/background_pg4.jpg',
+    'backgrounds/background_pg4.jpeg',
+    'backgrounds/background_pg4.jpg',
+  ],
+  background_pg5: [
+    'background_rsvp/background_pg5.jpg',
+    'backgrounds/background_pg5.jpeg',
+    'backgrounds/background_pg5.jpg',
+  ],
+  background_pg6: [
+    'background_rsvp/background_pg6.jpg',
+    'backgrounds/background_pg6.jpeg',
+    'backgrounds/background_pg6.jpg',
+  ],
+  gallery_on_the_slopes: [
+    'lightbox_on_the_slopes.jpg',
+    'gallery/on_the_slopes.jpg',
+  ],
+  gallery_alpine_adventures: [
+    'lightbox_alpine_adventures.jpg',
+    'gallery/alpine_adventures.jpg',
+  ],
+  gallery_she_said_yes: [
+    'lightbox_she_said_yes.jpeg',
+    'lightbox_she_said_yes.jpg',
+    'gallery/she_said_yes.jpg',
+  ],
+  gallery_concert_night: [
+    'lightbox_concert_night.jpg',
+    'gallery/concert_night.jpg',
+  ],
+  gallery_birthday_celebration: [
+    'lightbox_bday_celebration.jpeg',
+    'lightbox_birthday_celebration.jpeg',
+    'lightbox_birthday_celebration.jpg',
+    'gallery/birthday_celebration.jpg',
+  ],
+  gallery_winter_in_japan: [
+    'lightbox_winter_in_japan.jpg',
+    'gallery/winter_in_japan.jpg',
+  ],
 }
 
 function json(body: unknown, status = 200) {
@@ -51,6 +97,22 @@ async function verifyTurnstile(token: string, remoteIp?: string) {
   if (!res.ok) return false
   const result = await res.json()
   return result.success === true
+}
+
+async function listExistingStoragePaths(supabase: ReturnType<typeof createClient>) {
+  const folders = ['', 'background_rsvp', 'backgrounds', 'gallery']
+  const existing = new Set<string>()
+
+  await Promise.all(folders.map(async (folder) => {
+    const { data } = await supabase.storage.from(BUCKET).list(folder, { limit: 1000 })
+    if (!data) return
+    data.forEach((item) => {
+      const path = folder ? `${folder}/${item.name}` : item.name
+      existing.add(path)
+    })
+  }))
+
+  return existing
 }
 
 Deno.serve(async (req) => {
@@ -109,8 +171,18 @@ Deno.serve(async (req) => {
       page_path: path || null,
     })
 
+    const existingPaths = await listExistingStoragePaths(supabase)
     const keys = Object.keys(PHOTO_PATHS)
-    const paths = keys.map((key) => PHOTO_PATHS[key])
+    const signedUrlKeys: string[] = []
+    const paths = keys.flatMap((key) => {
+      const existingCandidates = PHOTO_PATHS[key].filter((path) => existingPaths.has(path))
+      signedUrlKeys.push(...existingCandidates.map(() => key))
+      return existingCandidates
+    })
+
+    if (!paths.length) {
+      throw new Error('No wedding media files were found in Supabase Storage.')
+    }
     const { data, error } = await supabase.storage
       .from(BUCKET)
       .createSignedUrls(paths, URL_EXPIRY_SECONDS)
@@ -118,8 +190,13 @@ Deno.serve(async (req) => {
     if (error || !data) throw error || new Error('Unable to create signed URLs')
 
     const assets: Record<string, string> = {}
+    const assetCandidates: Record<string, string[]> = {}
     data.forEach((item, index) => {
-      if (item.signedUrl) assets[keys[index]] = item.signedUrl
+      const key = signedUrlKeys[index]
+      if (!item.signedUrl || !key) return
+      assetCandidates[key] = assetCandidates[key] || []
+      assetCandidates[key].push(item.signedUrl)
+      if (!assets[key]) assets[key] = item.signedUrl
     })
 
     return json({
@@ -127,6 +204,7 @@ Deno.serve(async (req) => {
       session: crypto.randomUUID(),
       invite: { guestLabel: invite.guest_label, maxGuests: invite.max_guests },
       assets,
+      assetCandidates,
     })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Server error'

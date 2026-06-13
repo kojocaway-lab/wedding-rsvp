@@ -437,6 +437,7 @@ const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
 let inviteSession = null;
 let invitePasskey = '';
 let inviteAssets = {};
+let inviteAssetCandidates = {};
 let turnstileToken = '';
 
 const assetBindings = {
@@ -479,15 +480,47 @@ async function postToFunction(path, payload){
   return data;
 }
 
+function normalizeAssetCandidates(assets, assetCandidates){
+  const normalized = {};
+  Object.keys(assetBindings).forEach((key)=>{
+    const candidates = Array.isArray(assetCandidates&&assetCandidates[key]) ? assetCandidates[key] : [];
+    if(assets&&assets[key]) candidates.unshift(assets[key]);
+    normalized[key] = [...new Set(candidates.filter(Boolean))];
+  });
+  return normalized;
+}
+
+function testImage(url){
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.onload = ()=>resolve(url);
+    img.onerror = ()=>resolve('');
+    img.src = url;
+  });
+}
+
+async function firstWorkingImage(candidates){
+  for(const url of candidates){
+    const working = await testImage(url);
+    if(working) return working;
+  }
+  return '';
+}
+
 function hydrateAssets(assets){
   inviteAssets = assets || {};
+  inviteAssetCandidates = normalizeAssetCandidates(inviteAssets, inviteAssetCandidates);
   Object.keys(assetBindings).forEach((key)=>{
-    const url = inviteAssets[key];
-    if(!url) return;
+    const candidates = inviteAssetCandidates[key] || [];
+    if(!candidates.length) return;
     const binding = assetBindings[key];
     document.querySelectorAll(binding.selector).forEach((el)=>{
-      if(binding.type === 'background') el.style.backgroundImage = "url('" + url + "')";
-      if(binding.type === 'image') el.src = url;
+      firstWorkingImage(candidates).then((url)=>{
+        if(!url) return;
+        inviteAssets[key] = url;
+        if(binding.type === 'background') el.style.backgroundImage = "url('" + url + "')";
+        if(binding.type === 'image') el.src = url;
+      });
     });
   });
 }
@@ -497,6 +530,7 @@ function hasFreshSavedAssets(saved){
     saved &&
     saved.passkey &&
     saved.assets &&
+    saved.assetCandidates &&
     saved.savedAt &&
     Date.now() - saved.savedAt < ASSET_SESSION_TTL_MS
   );
@@ -563,8 +597,9 @@ async function checkPassword(){
     });
     invitePasskey = value;
     inviteSession = data.session || null;
+    inviteAssetCandidates = data.assetCandidates || {};
     hydrateAssets(data.assets);
-    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ passkey:value, session:inviteSession, assets:data.assets, savedAt:Date.now() }));}catch(e){}
+    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ passkey:value, session:inviteSession, assets:data.assets, assetCandidates:data.assetCandidates, savedAt:Date.now() }));}catch(e){}
     if(err)err.style.display='none';
     goTo('p1');
   }catch(e){
@@ -583,6 +618,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(hasFreshSavedAssets(saved)){
       invitePasskey = saved.passkey;
       inviteSession = saved.session || null;
+      inviteAssetCandidates = saved.assetCandidates || {};
       hydrateAssets(saved.assets);
       goTo('p1');
     }else{
