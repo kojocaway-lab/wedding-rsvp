@@ -9,40 +9,28 @@ const corsHeaders = {
 const BUCKET = 'wedding_rsvp_private'
 const URL_EXPIRY_SECONDS = 60 * 60
 
+function backgroundVariantPaths(name: string, extensions = ['jpg', 'jpeg', 'png']) {
+  return extensions.flatMap((extension) => [
+    `background_rsvp/${name}.${extension}`,
+    `${name}.${extension}`,
+    `backgrounds/${name}.${extension}`,
+  ])
+}
+
 const PHOTO_PATHS: Record<string, string[]> = {
-  background_pg1_desktop: [
-    'background_rsvp/background_pg1_desktop.jpg',
-  ],
-  background_pg1_mobile: [
-    'background_rsvp/background_pg1_mobile.jpg',
-  ],
-  background_pg2_desktop: [
-    'background_rsvp/background_pg2_desktop.jpg',
-  ],
-  background_pg2_mobile: [
-    'background_rsvp/background_pg2_mobile.jpeg',
-  ],
+  background_pg1_desktop: backgroundVariantPaths('background_pg1_desktop'),
+  background_pg1_mobile: backgroundVariantPaths('background_pg1_mobile'),
+  background_pg2_desktop: backgroundVariantPaths('background_pg2_desktop'),
+  background_pg2_mobile: backgroundVariantPaths('background_pg2_mobile', ['jpeg', 'jpg', 'png']),
   background_pg3: [
     'background_rsvp/background_pg3.jpg',
   ],
-  background_pg4_desktop: [
-    'background_rsvp/background_pg4_desktop.jpg',
-  ],
-  background_pg4_mobile: [
-    'background_rsvp/background_pg4_mobile.jpg',
-  ],
-  background_pg5_desktop: [
-    'background_rsvp/background_pg5_desktop.jpg',
-  ],
-  background_pg5_mobile: [
-    'background_rsvp/background_pg5_mobile.jpg',
-  ],
-  background_pg6_desktop: [
-    'background_rsvp/background_pg6_desktop.jpg',
-  ],
-  background_pg6_mobile: [
-    'background_rsvp/background_pg6_mobile.jpg',
-  ],
+  background_pg4_desktop: backgroundVariantPaths('background_pg4_desktop'),
+  background_pg4_mobile: backgroundVariantPaths('background_pg4_mobile'),
+  background_pg5_desktop: backgroundVariantPaths('background_pg5_desktop'),
+  background_pg5_mobile: backgroundVariantPaths('background_pg5_mobile'),
+  background_pg6_desktop: backgroundVariantPaths('background_pg6_desktop'),
+  background_pg6_mobile: backgroundVariantPaths('background_pg6_mobile'),
   gallery_on_the_slopes: [
     'gallery_rsvp/lightbox_on_the_slopes.jpg',
     'gallery/on_the_slopes.jpg',

@@ -12,27 +12,35 @@ const corsHeaders = {
 const BUCKET = 'wedding_rsvp_private'
 const URL_EXPIRY_SECONDS = 60 * 60 // 1 hour
 
-const PHOTO_PATHS: Record<string, string> = {
-  background_pg1_desktop: 'background_rsvp/background_pg1_desktop.jpg',
-  background_pg1_mobile: 'background_rsvp/background_pg1_mobile.jpg',
-  background_pg2_desktop: 'background_rsvp/background_pg2_desktop.jpg',
-  background_pg2_mobile: 'background_rsvp/background_pg2_mobile.jpeg',
-  background_pg3: 'background_rsvp/background_pg3.jpg',
-  background_pg4_desktop: 'background_rsvp/background_pg4_desktop.jpg',
-  background_pg4_mobile: 'background_rsvp/background_pg4_mobile.jpg',
-  background_pg5_desktop: 'background_rsvp/background_pg5_desktop.jpg',
-  background_pg5_mobile: 'background_rsvp/background_pg5_mobile.jpg',
-  background_pg6_desktop: 'background_rsvp/background_pg6_desktop.jpg',
-  background_pg6_mobile: 'background_rsvp/background_pg6_mobile.jpg',
+function backgroundVariantPaths(name: string, extensions = ['jpg', 'jpeg', 'png']) {
+  return extensions.flatMap((extension) => [
+    `background_rsvp/${name}.${extension}`,
+    `${name}.${extension}`,
+    `backgrounds/${name}.${extension}`,
+  ])
+}
+
+const PHOTO_PATHS: Record<string, string[]> = {
+  background_pg1_desktop: backgroundVariantPaths('background_pg1_desktop'),
+  background_pg1_mobile: backgroundVariantPaths('background_pg1_mobile'),
+  background_pg2_desktop: backgroundVariantPaths('background_pg2_desktop'),
+  background_pg2_mobile: backgroundVariantPaths('background_pg2_mobile', ['jpeg', 'jpg', 'png']),
+  background_pg3: ['background_rsvp/background_pg3.jpg'],
+  background_pg4_desktop: backgroundVariantPaths('background_pg4_desktop'),
+  background_pg4_mobile: backgroundVariantPaths('background_pg4_mobile'),
+  background_pg5_desktop: backgroundVariantPaths('background_pg5_desktop'),
+  background_pg5_mobile: backgroundVariantPaths('background_pg5_mobile'),
+  background_pg6_desktop: backgroundVariantPaths('background_pg6_desktop'),
+  background_pg6_mobile: backgroundVariantPaths('background_pg6_mobile'),
   
-  gallery_alpine_adventures: 'gallery_rsvp/lightbox_alpine_adventures.jpg',
-  gallery_balloon_turkey: 'gallery_rsvp/lightbox_balloon_turkey.jpeg',
-  gallery_birthday_celebration: 'gallery_rsvp/lightbox_bday_celebration.jpeg',
-  gallery_concert_night: 'gallery_rsvp/lightbox_concert_night.jpg',
-  gallery_on_the_slopes: 'gallery_rsvp/lightbox_on_the_slopes.jpg',
-  gallery_she_said_yes: 'gallery_rsvp/lightbox_she_said_yes.jpeg',
-  gallery_shibuya_sky: 'gallery_rsvp/lightbox_shibuya_sky.jpeg',
-  gallery_winter_in_japan: 'gallery_rsvp/lightbox_winter_in_japan.jpg',
+  gallery_alpine_adventures: ['gallery_rsvp/lightbox_alpine_adventures.jpg'],
+  gallery_balloon_turkey: ['gallery_rsvp/lightbox_balloon_turkey.jpeg'],
+  gallery_birthday_celebration: ['gallery_rsvp/lightbox_bday_celebration.jpeg'],
+  gallery_concert_night: ['gallery_rsvp/lightbox_concert_night.jpg'],
+  gallery_on_the_slopes: ['gallery_rsvp/lightbox_on_the_slopes.jpg'],
+  gallery_she_said_yes: ['gallery_rsvp/lightbox_she_said_yes.jpeg'],
+  gallery_shibuya_sky: ['gallery_rsvp/lightbox_shibuya_sky.jpeg'],
+  gallery_winter_in_japan: ['gallery_rsvp/lightbox_winter_in_japan.jpg'],
 }
 
 Deno.serve(async (req: Request) => { // Added Request type definition
@@ -65,24 +73,23 @@ Deno.serve(async (req: Request) => { // Added Request type definition
       auth: { persistSession: false },
     })
 
-    const keys = Object.keys(PHOTO_PATHS)
-    const paths = keys.map((key) => PHOTO_PATHS[key])
-
-    const { data, error } = await supabase.storage
-      .from(BUCKET)
-      .createSignedUrls(paths, URL_EXPIRY_SECONDS)
-
-    if (error || !data) {
-      throw error || new Error('Unable to create signed URLs')
-    }
-
     const assets: Record<string, string> = {}
-    // Added structural typing to item and index parameters below
-    data.forEach((item: { signedUrl: string }, index: number) => {
-      if (item.signedUrl) assets[keys[index]] = item.signedUrl
-    })
+    const assetCandidates: Record<string, string[]> = {}
+    await Promise.all(Object.entries(PHOTO_PATHS).map(async ([key, paths]) => {
+      const { data } = await supabase.storage
+        .from(BUCKET)
+        .createSignedUrls(paths, URL_EXPIRY_SECONDS)
 
-    return new Response(JSON.stringify({ ok: true, assets }), {
+      if (!data) return
+      data.forEach((item: { signedUrl?: string }) => {
+        if (!item.signedUrl) return
+        assetCandidates[key] = assetCandidates[key] || []
+        assetCandidates[key].push(item.signedUrl)
+        if (!assets[key]) assets[key] = item.signedUrl
+      })
+    }))
+
+    return new Response(JSON.stringify({ ok: true, assets, assetCandidates }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   } catch (err) {
