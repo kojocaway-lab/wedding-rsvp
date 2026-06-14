@@ -13,12 +13,17 @@ const BUCKET = 'wedding_rsvp_private'
 const URL_EXPIRY_SECONDS = 60 * 60 // 1 hour
 
 const PHOTO_PATHS: Record<string, string> = {
-  background_pg1: 'background_rsvp/background_pg1.jpg',
-  background_pg2: 'background_rsvp/background_pg2.png',
+  background_pg1_desktop: 'background_rsvp/background_pg1_desktop.jpg',
+  background_pg1_mobile: 'background_rsvp/background_pg1_mobile.jpg',
+  background_pg2_desktop: 'background_rsvp/background_pg2_desktop.jpg',
+  background_pg2_mobile: 'background_rsvp/background_pg2_mobile.jpeg',
   background_pg3: 'background_rsvp/background_pg3.jpg',
-  background_pg4: 'background_rsvp/background_pg4.jpg',
-  background_pg5: 'background_rsvp/background_pg5.jpg',
-  background_pg6: 'background_rsvp/background_pg6.jpg',
+  background_pg4_desktop: 'background_rsvp/background_pg4_desktop.jpg',
+  background_pg4_mobile: 'background_rsvp/background_pg4_mobile.jpg',
+  background_pg5_desktop: 'background_rsvp/background_pg5_desktop.jpg',
+  background_pg5_mobile: 'background_rsvp/background_pg5_mobile.jpg',
+  background_pg6_desktop: 'background_rsvp/background_pg6_desktop.jpg',
+  background_pg6_mobile: 'background_rsvp/background_pg6_mobile.jpg',
   
   gallery_alpine_adventures: 'gallery_rsvp/lightbox_alpine_adventures.jpg',
   gallery_balloon_turkey: 'gallery_rsvp/lightbox_balloon_turkey.jpeg',

@@ -10,82 +10,38 @@ const BUCKET = 'wedding_rsvp_private'
 const URL_EXPIRY_SECONDS = 60 * 60
 
 const PHOTO_PATHS: Record<string, string[]> = {
-  background_pg1: [
-    'background_pg1.jpg',
-    'background_rsvp/background_pg1.jpg',
-    'backgrounds/background_pg1.jpg',
-    'backgrounds/background_pg1.jpeg',
-  ],
   background_pg1_desktop: [
-    'background_pg1_desktop.jpg',
     'background_rsvp/background_pg1_desktop.jpg',
-    'backgrounds/background_pg1_desktop.jpg',
-    'backgrounds/background_pg1_desktop.jpeg',
   ],
   background_pg1_mobile: [
-    'background_pg1_mobile.jpg',
     'background_rsvp/background_pg1_mobile.jpg',
-    'backgrounds/background_pg1_mobile.jpg',
-    'backgrounds/background_pg1_mobile.jpeg',
-  ],
-  background_pg2: [
-    'background_pg2.png',
-    'background_pg2.jpg',
-    'background_rsvp/background_pg2.png',
-    'background_rsvp/background_pg2.jpg',
-    'backgrounds/background_pg2.png',
-    'backgrounds/background_pg2.jpeg',
-    'backgrounds/background_pg2.jpg',
   ],
   background_pg2_desktop: [
-    'background_pg2_desktop.jpg',
     'background_rsvp/background_pg2_desktop.jpg',
-    'backgrounds/background_pg2_desktop.jpg',
-    'backgrounds/background_pg2_desktop.jpeg',
   ],
   background_pg2_mobile: [
-    'background_pg2_mobile.jpeg',
-    'background_pg2_mobile.jpg',
     'background_rsvp/background_pg2_mobile.jpeg',
-    'background_rsvp/background_pg2_mobile.jpg',
-    'backgrounds/background_pg2_mobile.jpeg',
-    'backgrounds/background_pg2_mobile.jpg',
   ],
   background_pg3: [
-    'background_pg3.jpg',
     'background_rsvp/background_pg3.jpg',
-    'backgrounds/background_pg3.jpg',
-    'backgrounds/background_pg3.jpeg',
-  ],
-  background_pg4: [
-    'background_pg4.jpg',
-    'background_rsvp/background_pg4.jpg',
-    'backgrounds/background_pg4.jpg',
-    'backgrounds/background_pg4.jpeg',
   ],
   background_pg4_desktop: [
-    'background_pg4_desktop.jpg',
     'background_rsvp/background_pg4_desktop.jpg',
-    'backgrounds/background_pg4_desktop.jpg',
-    'backgrounds/background_pg4_desktop.jpeg',
   ],
-  background_pg5: [
-    'background_pg5.jpg',
-    'background_rsvp/background_pg5.jpg',
-    'backgrounds/background_pg5.jpg',
-    'backgrounds/background_pg5.jpeg',
+  background_pg4_mobile: [
+    'background_rsvp/background_pg4_mobile.jpg',
   ],
-  background_pg6: [
-    'background_pg6.jpg',
-    'background_rsvp/background_pg6.jpg',
-    'backgrounds/background_pg6.jpg',
-    'backgrounds/background_pg6.jpeg',
+  background_pg5_desktop: [
+    'background_rsvp/background_pg5_desktop.jpg',
+  ],
+  background_pg5_mobile: [
+    'background_rsvp/background_pg5_mobile.jpg',
   ],
   background_pg6_desktop: [
-    'background_pg6_desktop.jpg',
     'background_rsvp/background_pg6_desktop.jpg',
-    'backgrounds/background_pg6_desktop.jpg',
-    'backgrounds/background_pg6_desktop.jpeg',
+  ],
+  background_pg6_mobile: [
+    'background_rsvp/background_pg6_mobile.jpg',
   ],
   gallery_on_the_slopes: [
     'gallery_rsvp/lightbox_on_the_slopes.jpg',

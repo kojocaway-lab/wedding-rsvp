@@ -464,6 +464,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
+const ASSET_CACHE_VERSION = 2;
 
 let inviteSession = null;
 let invitePasskey = '';
@@ -489,8 +490,9 @@ const assetBindings = {
 const responsiveBackgrounds = {
   background_pg1: { desktop: 'background_pg1_desktop', mobile: 'background_pg1_mobile' },
   background_pg2: { desktop: 'background_pg2_desktop', mobile: 'background_pg2_mobile' },
-  background_pg4: { desktop: 'background_pg4_desktop' },
-  background_pg6: { desktop: 'background_pg6_desktop' }
+  background_pg4: { desktop: 'background_pg4_desktop', mobile: 'background_pg4_mobile' },
+  background_pg5: { desktop: 'background_pg5_desktop', mobile: 'background_pg5_mobile' },
+  background_pg6: { desktop: 'background_pg6_desktop', mobile: 'background_pg6_mobile' }
 };
 
 const assetKeys = [
@@ -542,8 +544,7 @@ function candidatesForAssetKey(key){
   if(!variants) return inviteAssetCandidates[key] || [];
 
   const preferredKey = isDesktopViewport() ? variants.desktop : variants.mobile;
-  const preferredCandidates = preferredKey ? (inviteAssetCandidates[preferredKey] || []) : [];
-  const keys = preferredCandidates.length ? [preferredKey] : [key];
+  const keys = preferredKey ? [preferredKey] : [key];
   return [...new Set(keys.flatMap((candidateKey)=>inviteAssetCandidates[candidateKey] || []))];
 }
 
@@ -602,6 +603,7 @@ if(window.matchMedia){
 function hasFreshSavedAssets(saved){
   return !!(
     saved &&
+    saved.version === ASSET_CACHE_VERSION &&
     saved.passkey &&
     saved.savedAt &&
     Date.now() - saved.savedAt < ASSET_SESSION_TTL_MS
@@ -671,7 +673,7 @@ async function checkPassword(){
     inviteSession = data.session || null;
     inviteAssetCandidates = data.assetCandidates || {};
     hydrateAssets(data.assets);
-    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ passkey:value, session:inviteSession, assets:data.assets, assetCandidates:data.assetCandidates, savedAt:Date.now() }));}catch(e){}
+    try{sessionStorage.setItem('weddingInviteSession', JSON.stringify({ version:ASSET_CACHE_VERSION, passkey:value, session:inviteSession, assets:data.assets, assetCandidates:data.assetCandidates, savedAt:Date.now() }));}catch(e){}
     if(err)err.style.display='none';
     goTo('p1');
   }catch(e){
