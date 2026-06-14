@@ -82,6 +82,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 }
 #p2 .btn{font-size:9.5px;}
 #p2 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;text-shadow:var(--strong-text-shadow);}
+#p2 .details-intro{display:block;text-align:center;font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;color:#fff;text-shadow:var(--strong-text-shadow);padding-bottom:2px;}
 #p2 .btn-row{flex-wrap:nowrap;gap:8px;}
 #p2 .btn-row .btn{flex:1;padding:13px 12px;}
 #p3 .btn{font-size:9.5px;}
@@ -209,6 +210,8 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .gallery-grid .g-pop{height:112px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:#1a1714;}
 .gallery-grid .g-pop img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s,filter .45s;filter:brightness(.83);}
 .gallery-grid .g-pop:hover img{transform:scale(1.06);filter:brightness(1);}
+.gallery-grid .gallery-footer{height:112px;padding:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.52);border:1px solid rgba(201,169,110,0.35);border-radius:12px;}
+.gallery-grid .gallery-footer .btn{padding:13px 18px;}
 .g-label{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.65));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.92);}
 .g-item.tall{height:185px;}
 .g-item.wide{height:112px;grid-column:span 2;}
@@ -264,11 +267,11 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   #p4 .content{left:-22vw;max-width:520px;}
   #p5 .bg{background-position:58% center!important;}
   #p6 .bg{background-position:center 46%!important;}
-  #p6 .content{margin-top:calc(-68px - 5vh);}
+  #p6 .content{margin-top:calc(-68px - 10vh);}
   #p6 .final-text-box{
     background:rgba(0,0,0,0.5);
     border:1px solid rgba(255,255,255,0.18);
-    border-radius:10px;
+    border-radius:22px;
     padding:18px 34px 12px;
     margin-bottom:18px;
     backdrop-filter:blur(5px);
@@ -277,6 +280,7 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   .gallery-grid .g-item.wide{height:160px;}
   .gallery-grid .g-item.half{height:140px;}
   .gallery-grid .g-pop{height:150px;}
+  .gallery-grid .gallery-footer{height:150px;}
 }
 @media(min-width:1200px){
   h1{font-size:clamp(80px,7vw,110px);}
@@ -360,8 +364,8 @@ input, select, textarea, .fi {
   <div class="bg" data-bg-key="background_pg2" style="background-position:center;"></div>
   <div class="overlay" style="background:linear-gradient(to bottom,rgba(0,0,0,0.04) 0%,rgba(0,0,0,0.2) 40%,rgba(0,0,0,0.82) 100%);"></div>
   <div class="content">
-    <h2>Join us as we celebrate our love and marriage</h2>
     <div class="details">
+      <h2 class="details-intro">Join us as we celebrate our love and marriage</h2>
       <div class="detail-row"><span class="dl">Date</span><span class="dv">19 December 2026</span></div>
       <div class="detail-row"><span class="dl">Venue</span><span class="dv">M Resort &amp; Hotel, Kuala Lumpur</span></div>
       <div class="detail-row"><span class="dl">Time</span><span class="dv">3:30 pm &nbsp; ROM (optional)<br>7:00 pm &nbsp; Dinner Reception</span></div>
@@ -446,8 +450,8 @@ input, select, textarea, .fi {
       <div class="g-pop" data-gi="8" onclick="openLb(8)"><img data-photo-key="gallery_shibuya_sky" alt=""/><div class="g-label">Shibuya Sky</div></div>
       <div class="g-pop" data-gi="9" onclick="openLb(9)"><img data-photo-key="gallery_tassie_adventures" alt=""/><div class="g-label">Tassie adventures</div></div>
       <div class="g-pop" data-gi="10" onclick="openLb(10)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
+      <div class="gallery-footer g-pop" data-gi="11"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
     </div>
-    <div class="gallery-footer g-pop" data-gi="11"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
   </div>
 </div>
 <div class="page" id="p6">
