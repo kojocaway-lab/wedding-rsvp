@@ -64,13 +64,22 @@ const PHOTO_PATHS: Record<string, string[]> = {
     'gallery/winter_in_japan.jpg',
     'lightbox_winter_in_japan.jpg',
   ],
+  gallery_bali_night: [
+    'gallery_rsvp/lightbox_bali_night.jpeg',
+  ],
   gallery_balloon_turkey: [
     'gallery_rsvp/lightbox_balloon_turkey.jpeg',
     'lightbox_balloon_turkey.jpeg',
   ],
+  gallery_disneysea: [
+    'gallery_rsvp/lightbox_disneysea.jpeg',
+  ],
   gallery_shibuya_sky: [
     'gallery_rsvp/lightbox_shibuya_sky.jpeg',
     'lightbox_shibuya_sky.jpeg',
+  ],
+  gallery_tassie_adventures: [
+    'gallery_rsvp/lightbox_tassie_adventures.jpeg',
   ],
 }
 

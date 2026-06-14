@@ -199,6 +199,9 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .g-item{border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:#1a1714;}
 .g-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s,filter .45s;filter:brightness(.83);}
 .g-item:hover img{transform:scale(1.06);filter:brightness(1);}
+.gallery-grid .g-pop{height:112px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:#1a1714;}
+.gallery-grid .g-pop img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s,filter .45s;filter:brightness(.83);}
+.gallery-grid .g-pop:hover img{transform:scale(1.06);filter:brightness(1);}
 .g-label{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.65));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.92);}
 .g-item.tall{height:185px;}
 .g-item.wide{height:112px;grid-column:span 2;}
@@ -265,6 +268,7 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   .gallery-grid .g-item.tall{height:260px;}
   .gallery-grid .g-item.wide{height:160px;}
   .gallery-grid .g-item.half{height:140px;}
+  .gallery-grid .g-pop{height:150px;}
 }
 @media(min-width:1200px){
   h1{font-size:clamp(80px,7vw,110px);}
@@ -423,16 +427,19 @@ input, select, textarea, .fi {
   <div class="gallery-wrap">
     <p class="gallery-title gallery-header" id="ght">Moments Along the Way</p>
     <div class="gallery-grid">
-      <div class="g-item tall g-pop" data-gi="0" onclick="openLb(0)"><img data-photo-key="gallery_on_the_slopes" alt=""/><div class="g-label">On the slopes</div></div>
-      <div style="display:flex;flex-direction:column;gap:7px;">
-        <div class="g-pop" data-gi="1" style="height:88px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;" onclick="openLb(1)"><img data-photo-key="gallery_alpine_adventures" alt="" style="width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.83);transition:transform .45s,filter .45s;"/><div class="g-label">Alpine adventures</div></div>
-        <div class="g-pop" data-gi="2" style="height:88px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;" onclick="openLb(2)"><img data-photo-key="gallery_she_said_yes" alt="" style="width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.83);transition:transform .45s,filter .45s;"/><div class="g-label">She said yes</div></div>
-      </div>
-      <div class="g-item wide g-pop" data-gi="3" onclick="openLb(3)"><img data-photo-key="gallery_concert_night" alt=""/><div class="g-label">Live concert</div></div>
-      <div class="g-item half g-pop" data-gi="4" onclick="openLb(4)"><img data-photo-key="gallery_birthday_celebration" alt=""/><div class="g-label">Celebrations</div></div>
-      <div class="g-item half g-pop" data-gi="5" onclick="openLb(5)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
+      <div class="g-pop" data-gi="0" onclick="openLb(0)"><img data-photo-key="gallery_on_the_slopes" alt=""/><div class="g-label">On the slopes</div></div>
+      <div class="g-pop" data-gi="1" onclick="openLb(1)"><img data-photo-key="gallery_alpine_adventures" alt=""/><div class="g-label">Alpine adventures</div></div>
+      <div class="g-pop" data-gi="2" onclick="openLb(2)"><img data-photo-key="gallery_bali_night" alt=""/><div class="g-label">Bali night</div></div>
+      <div class="g-pop" data-gi="3" onclick="openLb(3)"><img data-photo-key="gallery_balloon_turkey" alt=""/><div class="g-label">Balloon Turkey</div></div>
+      <div class="g-pop" data-gi="4" onclick="openLb(4)"><img data-photo-key="gallery_birthday_celebration" alt=""/><div class="g-label">Celebrations</div></div>
+      <div class="g-pop" data-gi="5" onclick="openLb(5)"><img data-photo-key="gallery_concert_night" alt=""/><div class="g-label">Live concert</div></div>
+      <div class="g-pop" data-gi="6" onclick="openLb(6)"><img data-photo-key="gallery_disneysea" alt=""/><div class="g-label">DisneySea</div></div>
+      <div class="g-pop" data-gi="7" onclick="openLb(7)"><img data-photo-key="gallery_she_said_yes" alt=""/><div class="g-label">She said yes</div></div>
+      <div class="g-pop" data-gi="8" onclick="openLb(8)"><img data-photo-key="gallery_shibuya_sky" alt=""/><div class="g-label">Shibuya Sky</div></div>
+      <div class="g-pop" data-gi="9" onclick="openLb(9)"><img data-photo-key="gallery_tassie_adventures" alt=""/><div class="g-label">Tassie adventures</div></div>
+      <div class="g-pop" data-gi="10" onclick="openLb(10)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
     </div>
-    <div class="gallery-footer g-pop" data-gi="6"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
+    <div class="gallery-footer g-pop" data-gi="11"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
   </div>
 </div>
 <div class="page" id="p6">
@@ -464,7 +471,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
-const ASSET_CACHE_VERSION = 4;
+const ASSET_CACHE_VERSION = 5;
 
 let inviteSession = null;
 let invitePasskey = '';
@@ -481,9 +488,14 @@ const assetBindings = {
   background_pg6: { selector: '[data-bg-key="background_pg6"]', type: 'background' },
   gallery_on_the_slopes: { selector: '[data-photo-key="gallery_on_the_slopes"]', type: 'image' },
   gallery_alpine_adventures: { selector: '[data-photo-key="gallery_alpine_adventures"]', type: 'image' },
-  gallery_she_said_yes: { selector: '[data-photo-key="gallery_she_said_yes"]', type: 'image' },
-  gallery_concert_night: { selector: '[data-photo-key="gallery_concert_night"]', type: 'image' },
+  gallery_bali_night: { selector: '[data-photo-key="gallery_bali_night"]', type: 'image' },
+  gallery_balloon_turkey: { selector: '[data-photo-key="gallery_balloon_turkey"]', type: 'image' },
   gallery_birthday_celebration: { selector: '[data-photo-key="gallery_birthday_celebration"]', type: 'image' },
+  gallery_concert_night: { selector: '[data-photo-key="gallery_concert_night"]', type: 'image' },
+  gallery_disneysea: { selector: '[data-photo-key="gallery_disneysea"]', type: 'image' },
+  gallery_she_said_yes: { selector: '[data-photo-key="gallery_she_said_yes"]', type: 'image' },
+  gallery_shibuya_sky: { selector: '[data-photo-key="gallery_shibuya_sky"]', type: 'image' },
+  gallery_tassie_adventures: { selector: '[data-photo-key="gallery_tassie_adventures"]', type: 'image' },
   gallery_winter_in_japan: { selector: '[data-photo-key="gallery_winter_in_japan"]', type: 'image' }
 };
 
@@ -893,9 +905,14 @@ updateCD();setInterval(updateCD,1000);
 const lbData=[
   {key:'gallery_on_the_slopes',cap:'On the slopes'},
   {key:'gallery_alpine_adventures',cap:'Alpine adventures'},
-  {key:'gallery_she_said_yes',cap:'She said yes'},
-  {key:'gallery_concert_night',cap:'Live concert'},
+  {key:'gallery_bali_night',cap:'Bali night'},
+  {key:'gallery_balloon_turkey',cap:'Balloon Turkey'},
   {key:'gallery_birthday_celebration',cap:'Celebrations'},
+  {key:'gallery_concert_night',cap:'Live concert'},
+  {key:'gallery_disneysea',cap:'DisneySea'},
+  {key:'gallery_she_said_yes',cap:'She said yes'},
+  {key:'gallery_shibuya_sky',cap:'Shibuya Sky'},
+  {key:'gallery_tassie_adventures',cap:'Tassie adventures'},
   {key:'gallery_winter_in_japan',cap:'Winter in Japan'}
 ];
 let currentLbIndex = 0;

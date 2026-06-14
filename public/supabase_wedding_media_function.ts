@@ -39,7 +39,10 @@ const PHOTO_PATHS: Record<string, string[]> = {
   gallery_concert_night: ['gallery_rsvp/lightbox_concert_night.jpg'],
   gallery_on_the_slopes: ['gallery_rsvp/lightbox_on_the_slopes.jpg'],
   gallery_she_said_yes: ['gallery_rsvp/lightbox_she_said_yes.jpeg'],
+  gallery_bali_night: ['gallery_rsvp/lightbox_bali_night.jpeg'],
+  gallery_disneysea: ['gallery_rsvp/lightbox_disneysea.jpeg'],
   gallery_shibuya_sky: ['gallery_rsvp/lightbox_shibuya_sky.jpeg'],
+  gallery_tassie_adventures: ['gallery_rsvp/lightbox_tassie_adventures.jpeg'],
   gallery_winter_in_japan: ['gallery_rsvp/lightbox_winter_in_japan.jpg'],
 }
 
