@@ -542,7 +542,8 @@ function candidatesForAssetKey(key){
   if(!variants) return inviteAssetCandidates[key] || [];
 
   const preferredKey = isDesktopViewport() ? variants.desktop : variants.mobile;
-  const keys = preferredKey ? [preferredKey] : [key];
+  const preferredCandidates = preferredKey ? (inviteAssetCandidates[preferredKey] || []) : [];
+  const keys = preferredCandidates.length ? [preferredKey] : [key];
   return [...new Set(keys.flatMap((candidateKey)=>inviteAssetCandidates[candidateKey] || []))];
 }
 
