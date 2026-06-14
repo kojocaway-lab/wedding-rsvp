@@ -15,6 +15,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
   --cream:rgba(247,242,233,0.88);
   --detail-label-font-size:9.5px;
   --detail-value-font-size:13.5px;
+  --detail-emphasis-font-size:15.5px;
   --strong-text-shadow:0 2px 2px rgba(0,0,0,0.95),0 5px 16px rgba(0,0,0,0.98),0 10px 28px rgba(0,0,0,0.9);
 }
 
@@ -81,17 +82,17 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
   background:rgba(0,0,0,0.38);color:#fff;cursor:pointer;transition:all .3s;backdrop-filter:blur(14px);
 }
 #p2 .btn{font-size:9.5px;}
-#p2 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;text-shadow:var(--strong-text-shadow);}
-#p2 .details-intro{display:block;text-align:center;font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;color:#fff;text-shadow:var(--strong-text-shadow);padding-bottom:2px;}
+#p2 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-emphasis-font-size);font-weight:700;text-shadow:var(--strong-text-shadow);}
+#p2 .details-intro{display:block;text-align:center;font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-emphasis-font-size);font-weight:700;color:#fff;text-shadow:var(--strong-text-shadow);padding-bottom:2px;}
 #p2 .btn-row{flex-wrap:nowrap;gap:8px;}
 #p2 .btn-row .btn{flex:1;padding:13px 12px;}
 #p3 .btn{font-size:9.5px;}
-#p3 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;text-shadow:var(--strong-text-shadow);}
+#p3 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-emphasis-font-size);font-weight:700;text-shadow:var(--strong-text-shadow);}
 .btn:hover{background:rgba(0,0,0,0.6);border-color:var(--champagne);color:var(--champagne);}
 .btn.gold{border-color:var(--champagne);color:var(--champagne);}
 #p1 .eyebrow-plain{font-weight:700;text-shadow:var(--strong-text-shadow);}
 #p1 h1{font-weight:700;color:rgba(247,240,228,0.96);text-shadow:var(--strong-text-shadow);}
-#p1 .tagline{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:700;text-shadow:var(--strong-text-shadow);}
+#p1 .tagline{font-family:'Raleway',sans-serif;font-style:normal;font-size:12px;font-weight:700;letter-spacing:6px;text-transform:uppercase;text-shadow:var(--strong-text-shadow);}
 #p4 .venue-note{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;color:#fff;letter-spacing:0;margin-bottom:10px;text-shadow:var(--strong-text-shadow);}
 #p6 .btn.gold{background:rgba(0,0,0,0.68);border-color:rgba(201,169,110,0.95);}
 
@@ -142,7 +143,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
   border-radius:16px;padding:16px 10px 14px;
 }
 .cd-heading{
-  font-family:'Raleway',sans-serif;font-weight:300;font-size:14px;color:rgba(247,240,228,0.9);
+  font-family:'Raleway',sans-serif;font-weight:700;font-size:14px;color:rgba(247,240,228,0.9);
   letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;
 }
 .cd-sub{
@@ -250,6 +251,7 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   .tagline{font-size:clamp(16px,1.8vw,22px);}
   .btn{font-size:clamp(10px,1.1vw,14px);padding:14px clamp(28px,3vw,44px);}
   :root{--detail-value-font-size:clamp(13px,1.5vw,18px);}
+  :root{--detail-emphasis-font-size:clamp(15px,1.7vw,20px);}
   .itin-title{font-size:clamp(38px,5vw,58px);}
   .itin-label{font-size:clamp(17px,2vw,24px);}
   .itin-venue{font-size:clamp(11px,1.15vw,15px);}
@@ -855,7 +857,7 @@ async function submitAttend(){
   launchConfetti();
   const vp=document.querySelector('meta[name=viewport]');
   if(vp){vp.content='width=device-width,initial-scale=1,maximum-scale=1';setTimeout(()=>{vp.content='width=device-width,initial-scale=1,viewport-fit=cover';},300);}
-  setTimeout(()=>goTo('p4'),1200);
+  setTimeout(()=>goTo('p4'),3000);
 }
 
 async function submitDecline(){
