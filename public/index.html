@@ -464,7 +464,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
-const ASSET_CACHE_VERSION = 2;
+const ASSET_CACHE_VERSION = 3;
 
 let inviteSession = null;
 let invitePasskey = '';
@@ -544,7 +544,8 @@ function candidatesForAssetKey(key){
   if(!variants) return inviteAssetCandidates[key] || [];
 
   const preferredKey = isDesktopViewport() ? variants.desktop : variants.mobile;
-  const keys = preferredKey ? [preferredKey] : [key];
+  const preferredCandidates = preferredKey ? (inviteAssetCandidates[preferredKey] || []) : [];
+  const keys = preferredCandidates.length ? [preferredKey] : [key];
   return [...new Set(keys.flatMap((candidateKey)=>inviteAssetCandidates[candidateKey] || []))];
 }
 
