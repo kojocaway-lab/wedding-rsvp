@@ -486,6 +486,18 @@ const assetBindings = {
   gallery_winter_in_japan: { selector: '[data-photo-key="gallery_winter_in_japan"]', type: 'image' }
 };
 
+const responsiveBackgrounds = {
+  background_pg1: { desktop: 'background_pg1_desktop', mobile: 'background_pg1_mobile' },
+  background_pg2: { desktop: 'background_pg2_desktop', mobile: 'background_pg2_mobile' },
+  background_pg4: { desktop: 'background_pg4_desktop' },
+  background_pg6: { desktop: 'background_pg6_desktop' }
+};
+
+const assetKeys = [
+  ...Object.keys(assetBindings),
+  ...Object.values(responsiveBackgrounds).flatMap((variants)=>Object.values(variants))
+].filter((key, index, keys)=>keys.indexOf(key) === index);
+
 function functionUrl(path){
   return SUPABASE_FUNCTION_BASE.replace(/\/$/, '') + path;
 }
@@ -513,12 +525,25 @@ async function postToFunction(path, payload){
 
 function normalizeAssetCandidates(assets, assetCandidates){
   const normalized = {};
-  Object.keys(assetBindings).forEach((key)=>{
+  assetKeys.forEach((key)=>{
     const candidates = Array.isArray(assetCandidates&&assetCandidates[key]) ? assetCandidates[key] : [];
     if(assets&&assets[key]) candidates.unshift(assets[key]);
     normalized[key] = [...new Set(candidates.filter(Boolean))];
   });
   return normalized;
+}
+
+function isDesktopViewport(){
+  return window.matchMedia && window.matchMedia('(min-width:768px)').matches;
+}
+
+function candidatesForAssetKey(key){
+  const variants = responsiveBackgrounds[key];
+  if(!variants) return inviteAssetCandidates[key] || [];
+
+  const preferredKey = isDesktopViewport() ? variants.desktop : variants.mobile;
+  const keys = preferredKey ? [preferredKey, key] : [key];
+  return [...new Set(keys.flatMap((candidateKey)=>inviteAssetCandidates[candidateKey] || []))];
 }
 
 function testImage(url){
@@ -538,15 +563,17 @@ async function firstWorkingImage(candidates){
   return '';
 }
 
-function hydrateAssets(assets){
-  inviteAssets = assets || {};
-  inviteAssetCandidates = normalizeAssetCandidates(inviteAssets, inviteAssetCandidates);
+let assetHydrationRun = 0;
+
+function applyAssetBindings(){
+  const run = ++assetHydrationRun;
   Object.keys(assetBindings).forEach((key)=>{
-    const candidates = inviteAssetCandidates[key] || [];
+    const candidates = candidatesForAssetKey(key);
     if(!candidates.length) return;
     const binding = assetBindings[key];
     document.querySelectorAll(binding.selector).forEach((el)=>{
       firstWorkingImage(candidates).then((url)=>{
+        if(run !== assetHydrationRun) return;
         if(!url) return;
         inviteAssets[key] = url;
         if(binding.type === 'background') el.style.backgroundImage = "url('" + url + "')";
@@ -554,6 +581,21 @@ function hydrateAssets(assets){
       });
     });
   });
+}
+
+function hydrateAssets(assets){
+  inviteAssets = assets || {};
+  inviteAssetCandidates = normalizeAssetCandidates(inviteAssets, inviteAssetCandidates);
+  applyAssetBindings();
+}
+
+if(window.matchMedia){
+  const backgroundMediaQuery = window.matchMedia('(min-width:768px)');
+  if(backgroundMediaQuery.addEventListener){
+    backgroundMediaQuery.addEventListener('change', applyAssetBindings);
+  }else if(backgroundMediaQuery.addListener){
+    backgroundMediaQuery.addListener(applyAssetBindings);
+  }
 }
 
 function hasFreshSavedAssets(saved){
