@@ -14,6 +14,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
   --gold:#b8935a;
   --cream:rgba(247,242,233,0.88);
   --detail-label-font-size:9.5px;
+  --detail-value-font-size:13.5px;
+  --strong-text-shadow:0 2px 2px rgba(0,0,0,0.95),0 5px 16px rgba(0,0,0,0.98),0 10px 28px rgba(0,0,0,0.9);
 }
 
 /* ── PAGES ─────────────────────────────── */
@@ -49,7 +51,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
 h1{font-family:'Tangerine',cursive;font-size:65px;line-height:1.05;color:rgba(247,240,228,0.85);margin-bottom:8px;}
 h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(247,240,228,0.82);margin-bottom:14px;}
 .gallery-title{font-family:'Tangerine',cursive;font-size:28px;color:rgba(247,240,228,0.82);text-align:center;margin-bottom:14px;}
-.itin-title{font-family:'Tangerine',cursive;font-size:38px;color:rgba(247,240,228,0.82);margin:0 0 2px 78px;text-align:left;}
+.itin-title{font-family:'Tangerine',cursive;font-size:38px;font-weight:700;color:rgba(247,240,228,0.92);margin:0 0 2px 78px;text-align:left;text-shadow:var(--strong-text-shadow);}
 .final-name{font-family:'Tangerine',cursive;font-size:58px;color:rgba(247,240,228,0.88);margin-bottom:10px;}
 
 /* ── BODY TEXT ────────────────────────── */
@@ -68,7 +70,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 }
 .detail-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
 .dl{font-family:'Raleway',sans-serif;font-weight:400;font-size:var(--detail-label-font-size);letter-spacing:3.5px;text-transform:uppercase;color:var(--champagne);white-space:nowrap;}
-.dv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;font-weight:300;color:#fff;text-align:right;text-shadow:0 1px 6px rgba(0,0,0,0.9);}
+.dv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:var(--detail-value-font-size);font-weight:300;color:#fff;text-align:right;text-shadow:0 1px 6px rgba(0,0,0,0.9);}
 #p2 .dv{font-style:normal;}
 
 /* ── BUTTONS ──────────────────────────── */
@@ -79,13 +81,18 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
   background:rgba(0,0,0,0.38);color:#fff;cursor:pointer;transition:all .3s;backdrop-filter:blur(14px);
 }
 #p2 .btn{font-size:9.5px;}
-#p2 h2{font-family:'Forum',serif;font-style:italic;font-size:var(--detail-label-font-size);}
+#p2 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;text-shadow:var(--strong-text-shadow);}
 #p2 .btn-row{flex-wrap:nowrap;gap:8px;}
 #p2 .btn-row .btn{flex:1;padding:13px 12px;}
 #p3 .btn{font-size:9.5px;}
-#p3 h2{font-family:'Forum',serif;font-style:italic;font-size:var(--detail-label-font-size);}
+#p3 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;text-shadow:var(--strong-text-shadow);}
 .btn:hover{background:rgba(0,0,0,0.6);border-color:var(--champagne);color:var(--champagne);}
 .btn.gold{border-color:var(--champagne);color:var(--champagne);}
+#p1 .eyebrow-plain{font-weight:700;text-shadow:var(--strong-text-shadow);}
+#p1 h1{font-weight:700;color:rgba(247,240,228,0.96);text-shadow:var(--strong-text-shadow);}
+#p1 .tagline{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:700;text-shadow:var(--strong-text-shadow);}
+#p4 .venue-note{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-value-font-size);font-weight:300;color:#fff;letter-spacing:0;margin-bottom:10px;text-shadow:var(--strong-text-shadow);}
+#p6 .btn.gold{background:rgba(0,0,0,0.68);border-color:rgba(201,169,110,0.95);}
 
 /* ── RSVP FORM ────────────────────────── */
 .form-group{display:flex;flex-direction:column;gap:8px;margin:12px 0 16px;text-align:left;}
@@ -239,7 +246,7 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   .eyebrow-plain{font-size:clamp(12px,1.4vw,18px);}
   .tagline{font-size:clamp(16px,1.8vw,22px);}
   .btn{font-size:clamp(10px,1.1vw,14px);padding:14px clamp(28px,3vw,44px);}
-  .dv{font-size:clamp(13px,1.5vw,18px);}
+  :root{--detail-value-font-size:clamp(13px,1.5vw,18px);}
   .itin-title{font-size:clamp(38px,5vw,58px);}
   .itin-label{font-size:clamp(17px,2vw,24px);}
   .itin-venue{font-size:clamp(11px,1.15vw,15px);}
@@ -257,6 +264,7 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   #p4 .content{left:-22vw;max-width:520px;}
   #p5 .bg{background-position:58% center!important;}
   #p6 .bg{background-position:center 46%!important;}
+  #p6 .content{margin-top:calc(-68px - 5vh);}
   #p6 .final-text-box{
     background:rgba(0,0,0,0.5);
     border:1px solid rgba(255,255,255,0.18);
@@ -396,7 +404,7 @@ input, select, textarea, .fi {
       </div>
     </div>
     <div class="itin-title">Wedding Itinerary</div>
-    <p style="font-family:'Raleway',sans-serif;font-size:15px;font-weight:300;color:rgba(255,255,255,0.78);letter-spacing:2px;margin-bottom:10px;text-shadow:0 1px 6px rgba(0,0,0,0.9);">@ M Resort</p>
+    <p class="venue-note">@ M Resort</p>
     <div class="itinerary">
       <div class="itin-row"><span class="itin-time">3:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">ROM Ceremony</div><div class="itin-venue">Bukit Tunku Room &middot; Level 9</div></div></div>
       <div class="itin-row"><span class="itin-time">5:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Tea Ceremony</div><div class="itin-venue">Bukit Tunku Room &middot; Level 9</div></div></div>
