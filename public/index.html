@@ -13,6 +13,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
   --champagne:#c9a96e;
   --gold:#b8935a;
   --cream:rgba(247,242,233,0.88);
+  --detail-label-font-size:9.5px;
 }
 
 /* ── PAGES ─────────────────────────────── */
@@ -23,7 +24,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
 .overlay{position:absolute;inset:0;pointer-events:none!important;}
 
 /* ── CONTENT ────────────────────────────── */
-.content{position:relative;z-index:3;text-align:center;padding:28px 24px;max-width:480px;width:100%;animation:fadeUp 1.3s ease both;animation-delay:0.95s;}
+.content{position:relative;z-index:3;text-align:center;padding:28px 24px;max-width:480px;width:100%;animation:fadeUp 1.3s ease both;animation-delay:1.5s;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 
 /* ── EYEBROW ────────────────────────────── */
@@ -65,23 +66,23 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
   background:rgba(0,0,0,0.38);backdrop-filter:blur(8px);
 }
 .detail-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
-.dl{font-family:'Raleway',sans-serif;font-weight:400;font-size:9.5px;letter-spacing:3.5px;text-transform:uppercase;color:var(--champagne);white-space:nowrap;}
+.dl{font-family:'Raleway',sans-serif;font-weight:400;font-size:var(--detail-label-font-size);letter-spacing:3.5px;text-transform:uppercase;color:var(--champagne);white-space:nowrap;}
 .dv{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;font-weight:300;color:#fff;text-align:right;text-shadow:0 1px 6px rgba(0,0,0,0.9);}
 #p2 .dv{font-style:normal;}
 
 /* ── BUTTONS ──────────────────────────── */
 .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 .btn{
-  font-family:'Raleway',sans-serif;font-weight:300;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  font-family:'Raleway',sans-serif;font-weight:700;font-size:10px;letter-spacing:3px;text-transform:uppercase;
   padding:13px 28px;border:1px solid rgba(255,255,255,0.5);border-radius:999px;
   background:rgba(0,0,0,0.38);color:#fff;cursor:pointer;transition:all .3s;backdrop-filter:blur(14px);
 }
 #p2 .btn{font-size:9.5px;}
-#p2 h2{font-family:'Forum',serif;font-style:italic;font-size:15px;}
+#p2 h2{font-family:'Forum',serif;font-style:italic;font-size:var(--detail-label-font-size);}
 #p2 .btn-row{flex-wrap:nowrap;gap:8px;}
 #p2 .btn-row .btn{flex:1;padding:13px 12px;}
 #p3 .btn{font-size:9.5px;}
-#p3 h2{font-family:'Forum',serif;font-style:italic;font-size:15px;}
+#p3 h2{font-family:'Forum',serif;font-style:italic;font-size:var(--detail-label-font-size);}
 .btn:hover{background:rgba(0,0,0,0.6);border-color:var(--champagne);color:var(--champagne);}
 .btn.gold{border-color:var(--champagne);color:var(--champagne);}
 
@@ -182,7 +183,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .gallery-wrap{
   position:relative;z-index:3;width:100%;max-width:500px;
   padding:18px 16px 12px;
-  animation:fadeUp 1.3s ease both;animation-delay:0.95s;
+  animation:fadeUp 1.3s ease both;animation-delay:1.5s;
   max-height:100vh;overflow-y:auto;scrollbar-width:none;
 }
 .gallery-wrap::-webkit-scrollbar{display:none;}
@@ -219,6 +220,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .lb-close:hover{color:var(--champagne);}
 
 #p6 .content{margin-top:-68px;}
+#p6 .final-text-box{display:inline-block;}
 #p6 .eyebrow{background:none;border-radius:0;padding:0;backdrop-filter:none;font-family:'Raleway',sans-serif;font-weight:700;
 font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72),0 5px 16px rgba(0,0,0,0.95);}
 #p6 .final-name{color:rgba(247,240,228,0.96);text-shadow:0 2px 0 rgba(0,0,0,0.76),0 6px 20px rgba(0,0,0,0.98);}
@@ -227,12 +229,12 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
 
 /* ── RESPONSIVE: scale up on larger screens ── */
 @media(min-width:768px){
+  :root{--detail-label-font-size:clamp(9px,1vw,13px);}
   h1{font-size:clamp(65px,8vw,100px);}
   h2{font-size:clamp(28px,3.5vw,42px);}
   .eyebrow-plain{font-size:clamp(12px,1.4vw,18px);}
   .tagline{font-size:clamp(16px,1.8vw,22px);}
   .btn{font-size:clamp(10px,1.1vw,14px);padding:14px clamp(28px,3vw,44px);}
-  .dl{font-size:clamp(9px,1vw,13px);}
   .dv{font-size:clamp(13px,1.5vw,18px);}
   .itin-title{font-size:clamp(38px,5vw,58px);}
   .itin-label{font-size:clamp(17px,2vw,24px);}
@@ -249,6 +251,16 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
   #p2 .bg{background-position:center 20%!important;}
   #p4 .bg{background-size:cover!important;background-repeat:no-repeat;background-position:68% 66%!important;}
   #p4 .content{left:-22vw;max-width:520px;}
+  #p5 .bg{background-position:58% center!important;}
+  #p6 .bg{background-position:center 46%!important;}
+  #p6 .final-text-box{
+    background:rgba(0,0,0,0.5);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;
+    padding:18px 34px 12px;
+    margin-bottom:18px;
+    backdrop-filter:blur(5px);
+  }
   .gallery-grid .g-item.tall{height:260px;}
   .gallery-grid .g-item.wide{height:160px;}
   .gallery-grid .g-item.half{height:140px;}
@@ -425,9 +437,11 @@ input, select, textarea, .fi {
   <div class="bg" data-bg-key="background_pg6" style="background-position:center 55%;"></div>
   <div class="overlay" style="background:transparent;"></div>
   <div class="content">
-    <p class="eyebrow">With love</p>
-    <div class="final-name">Joseph &amp; Chloe</div>
-    <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="final-text-box">
+      <p class="eyebrow">With love</p>
+      <div class="final-name">Joseph &amp; Chloe</div>
+      <div class="ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    </div>
     <button class="btn gold" onclick="goTo('p5')">Our Memories</button>
   </div>
 </div>
@@ -648,13 +662,13 @@ function goTo(id){
     // reset all gallery items
     document.querySelectorAll('.gallery-header').forEach(el=>el.classList.remove('show'));
     document.querySelectorAll('.g-pop').forEach(el=>el.classList.remove('show'));
-    // show background first (1s pause), then header text, then photos one by one
+    // show background first (1.5s pause), then header text, then photos one by one
     setTimeout(()=>{
       document.querySelectorAll('.gallery-header').forEach(el=>el.classList.add('show'));
-    },1650);
+    },1500);
     const items=document.querySelectorAll('.g-pop');
     items.forEach((el,i)=>{
-      setTimeout(()=>el.classList.add('show'), 2350 + i*280);
+      setTimeout(()=>el.classList.add('show'), 1850 + i*280);
     });
   } else {
     const c=next.querySelector('.content,.gallery-wrap');
@@ -929,12 +943,12 @@ document.addEventListener('DOMContentLoaded',()=>{
       document.querySelectorAll('.gallery-header').forEach(function(el){
         el.classList.add('show');
       });
-    }, 250);
+    }, 1500);
 
     document.querySelectorAll('.g-pop').forEach(function(el, i){
       setTimeout(function(){
         el.classList.add('show');
-      }, 500 + i * 120);
+      }, 1850 + i * 120);
     });
   }
 
