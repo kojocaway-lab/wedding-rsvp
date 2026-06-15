@@ -86,9 +86,23 @@ const PHOTO_PATHS: Record<string, string[]> = {
   ],
   gallery_dubrovnik: [
     'gallery_rsvp/lightbox_Dubrovnik.jpeg',
+    'gallery_rsvp/lightbox_dubrovnik.jpeg',
+    'gallery_rsvp/lightbox_Dubrovnik.jpg',
+    'gallery_rsvp/lightbox_dubrovnik.jpg',
+    'gallery_rsvp/lightbox_Dubrovnik.JPEG',
+    'gallery_rsvp/lightbox_dubrovnik.JPEG',
+    'gallery_rsvp/lightbox_Dubrovnik.JPG',
+    'gallery_rsvp/lightbox_dubrovnik.JPG',
   ],
   gallery_hallstatt: [
     'gallery_rsvp/lightbox_hallstatt.jpeg',
+    'gallery_rsvp/lightbox_Hallstatt.jpeg',
+    'gallery_rsvp/lightbox_hallstatt.jpg',
+    'gallery_rsvp/lightbox_Hallstatt.jpg',
+    'gallery_rsvp/lightbox_hallstatt.JPEG',
+    'gallery_rsvp/lightbox_Hallstatt.JPEG',
+    'gallery_rsvp/lightbox_hallstatt.JPG',
+    'gallery_rsvp/lightbox_Hallstatt.JPG',
   ],
   gallery_london: [
     'gallery_rsvp/lightbox_london.jpeg',
