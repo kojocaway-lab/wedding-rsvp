@@ -81,6 +81,21 @@ const PHOTO_PATHS: Record<string, string[]> = {
   gallery_tassie_adventures: [
     'gallery_rsvp/lightbox_tassie_adventures.jpeg',
   ],
+  gallery_alps: [
+    'gallery_rsvp/lightbox_alps.jpeg',
+  ],
+  gallery_dubrovnik: [
+    'gallery_rsvp/lightbox_Dubrovnik.jpeg',
+  ],
+  gallery_hallstatt: [
+    'gallery_rsvp/lightbox_hallstatt.jpeg',
+  ],
+  gallery_london: [
+    'gallery_rsvp/lightbox_london.jpeg',
+  ],
+  gallery_saltmine_adventures: [
+    'gallery_rsvp/lightbox_saltmine_adventures.jpeg',
+  ],
 }
 
 function json(body: unknown, status = 200) {

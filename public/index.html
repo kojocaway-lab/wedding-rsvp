@@ -462,7 +462,12 @@ input, select, textarea, .fi {
       <div class="g-pop" data-gi="7" onclick="openLb(7)"><img data-photo-key="gallery_shibuya_sky" alt=""/><div class="g-label">Shibuya Sky</div></div>
       <div class="g-pop" data-gi="8" onclick="openLb(8)"><img data-photo-key="gallery_tassie_adventures" alt=""/><div class="g-label">Tassie adventures</div></div>
       <div class="g-pop" data-gi="9" onclick="openLb(9)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
-      <div class="gallery-footer g-pop" data-gi="10"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
+      <div class="g-pop" data-gi="10" onclick="openLb(10)"><img data-photo-key="gallery_alps" alt=""/><div class="g-label">Alps</div></div>
+      <div class="g-pop" data-gi="11" onclick="openLb(11)"><img data-photo-key="gallery_dubrovnik" alt=""/><div class="g-label">Dubrovnik</div></div>
+      <div class="g-pop" data-gi="12" onclick="openLb(12)"><img data-photo-key="gallery_hallstatt" alt=""/><div class="g-label">Hallstatt</div></div>
+      <div class="g-pop" data-gi="13" onclick="openLb(13)"><img data-photo-key="gallery_london" alt=""/><div class="g-label">London</div></div>
+      <div class="g-pop" data-gi="14" onclick="openLb(14)"><img data-photo-key="gallery_saltmine_adventures" alt=""/><div class="g-label">Saltmine adventures</div></div>
+      <div class="gallery-footer g-pop" data-gi="15"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
     </div>
   </div>
 </div>
@@ -495,7 +500,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const MEDIA_FUNCTION_PATH = '/wedding-media';
 const RSVP_FUNCTION_PATH = '/wedding-rsvp-submit';
 const ASSET_SESSION_TTL_MS = 55 * 60 * 1000;
-const ASSET_CACHE_VERSION = 5;
+const ASSET_CACHE_VERSION = 6;
 
 let inviteSession = null;
 let invitePasskey = '';
@@ -519,7 +524,12 @@ const assetBindings = {
   gallery_she_said_yes: { selector: '[data-photo-key="gallery_she_said_yes"]', type: 'image' },
   gallery_shibuya_sky: { selector: '[data-photo-key="gallery_shibuya_sky"]', type: 'image' },
   gallery_tassie_adventures: { selector: '[data-photo-key="gallery_tassie_adventures"]', type: 'image' },
-  gallery_winter_in_japan: { selector: '[data-photo-key="gallery_winter_in_japan"]', type: 'image' }
+  gallery_winter_in_japan: { selector: '[data-photo-key="gallery_winter_in_japan"]', type: 'image' },
+  gallery_alps: { selector: '[data-photo-key="gallery_alps"]', type: 'image' },
+  gallery_dubrovnik: { selector: '[data-photo-key="gallery_dubrovnik"]', type: 'image' },
+  gallery_hallstatt: { selector: '[data-photo-key="gallery_hallstatt"]', type: 'image' },
+  gallery_london: { selector: '[data-photo-key="gallery_london"]', type: 'image' },
+  gallery_saltmine_adventures: { selector: '[data-photo-key="gallery_saltmine_adventures"]', type: 'image' }
 };
 
 const responsiveBackgrounds = {
@@ -946,7 +956,12 @@ const lbData=[
   {key:'gallery_she_said_yes',cap:'She said yes'},
   {key:'gallery_shibuya_sky',cap:'Shibuya Sky'},
   {key:'gallery_tassie_adventures',cap:'Tassie adventures'},
-  {key:'gallery_winter_in_japan',cap:'Winter in Japan'}
+  {key:'gallery_winter_in_japan',cap:'Winter in Japan'},
+  {key:'gallery_alps',cap:'Alps'},
+  {key:'gallery_dubrovnik',cap:'Dubrovnik'},
+  {key:'gallery_hallstatt',cap:'Hallstatt'},
+  {key:'gallery_london',cap:'London'},
+  {key:'gallery_saltmine_adventures',cap:'Saltmine adventures'}
 ];
 let currentLbIndex = 0;
 let lbTouchStartX = 0;

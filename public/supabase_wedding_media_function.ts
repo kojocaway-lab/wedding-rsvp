@@ -44,6 +44,11 @@ const PHOTO_PATHS: Record<string, string[]> = {
   gallery_shibuya_sky: ['gallery_rsvp/lightbox_shibuya_sky.jpeg'],
   gallery_tassie_adventures: ['gallery_rsvp/lightbox_tassie_adventures.jpeg'],
   gallery_winter_in_japan: ['gallery_rsvp/lightbox_winter_in_japan.jpg'],
+  gallery_alps: ['gallery_rsvp/lightbox_alps.jpeg'],
+  gallery_dubrovnik: ['gallery_rsvp/lightbox_Dubrovnik.jpeg'],
+  gallery_hallstatt: ['gallery_rsvp/lightbox_hallstatt.jpeg'],
+  gallery_london: ['gallery_rsvp/lightbox_london.jpeg'],
+  gallery_saltmine_adventures: ['gallery_rsvp/lightbox_saltmine_adventures.jpeg'],
 }
 
 Deno.serve(async (req: Request) => { // Added Request type definition
