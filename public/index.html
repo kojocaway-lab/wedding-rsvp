@@ -85,6 +85,13 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 #p2 .btn{font-size:9.5px;}
 #p2 h2{font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-emphasis-font-size);font-weight:700;text-shadow:var(--strong-text-shadow);}
 #p2 .details-intro{display:block;text-align:center;font-family:'Cormorant Garamond',serif;font-style:normal;font-size:var(--detail-emphasis-font-size);font-weight:700;color:#fff;text-shadow:var(--strong-text-shadow);padding-bottom:2px;}
+#p2 .dl{font-size:calc(var(--detail-label-font-size) + 2px);}
+#p2 .dv{font-size:calc(var(--detail-value-font-size) + 2px);}
+#p2 h2,#p2 .details-intro{font-size:calc(var(--detail-emphasis-font-size) + 2px);}
+#p2 .btn{font-size:11.5px;}
+#p2 .time-list{display:inline-grid;grid-template-columns:max-content max-content;column-gap:12px;row-gap:2px;text-align:left;}
+#p2 .time-list .time{font-variant-numeric:tabular-nums;white-space:nowrap;}
+#p2 .time-list .event{white-space:nowrap;}
 #p2 .btn-row{flex-wrap:nowrap;gap:8px;}
 #p2 .btn-row .btn{flex:1;padding:13px 12px;}
 #p3 .btn{font-size:9.5px;}
@@ -113,7 +120,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .guest-row{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}
 .guest-row-top{display:flex;gap:8px;}
 .guest-row-top .name-input{flex:1;}
-.dietary-wrap{display:flex;flex-direction:column;gap:5px;width:130px;flex-shrink:0;}
+.dietary-wrap{display:flex;flex-direction:column;gap:5px;width:180px;flex-shrink:0;}
 .dietary-wrap select{
   width:100%;padding:12px 10px;border-radius:12px;
   border:1px solid rgba(255,255,255,0.18);
@@ -239,7 +246,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 #p6 .final-text-box{display:inline-block;}
 #p6 .eyebrow{background:none;border-radius:0;padding:0;backdrop-filter:none;font-family:'Raleway',sans-serif;font-weight:700;
 font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72),0 5px 16px rgba(0,0,0,0.95);}
-#p6 .final-name{color:rgba(247,240,228,0.96);text-shadow:0 2px 0 rgba(0,0,0,0.76),0 6px 20px rgba(0,0,0,0.98);}
+#p6 .final-name{font-weight:700;color:rgba(247,240,228,0.96);text-shadow:0 2px 0 rgba(0,0,0,0.76),0 6px 20px rgba(0,0,0,0.98);}
 #p6 .final-sub{font-family:'Raleway',sans-serif;font-style:normal;font-weight:700;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72),0 5px 16px rgba(0,0,0,0.95);}
 #p6 .ornament{color:var(--champagne);text-shadow:0 2px 0 rgba(0,0,0,0.72),0 5px 14px rgba(0,0,0,0.95);}
 
@@ -288,6 +295,10 @@ font-size:13px;letter-spacing:5px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.72
 @media(min-width:1200px){
   h1{font-size:clamp(80px,7vw,110px);}
   .final-name{font-size:clamp(70px,8vw,110px);}
+}
+@media(max-width:380px){
+  .guest-row-top{flex-direction:column;}
+  .dietary-wrap{width:100%;}
 }
 canvas{position:fixed;inset:0;pointer-events:none!important;z-index:0;}
 </style>
@@ -371,7 +382,7 @@ input, select, textarea, .fi {
       <h2 class="details-intro">Join us as we celebrate our love and marriage</h2>
       <div class="detail-row"><span class="dl">Date</span><span class="dv">19 December 2026</span></div>
       <div class="detail-row"><span class="dl">Venue</span><span class="dv">M Resort &amp; Hotel, Kuala Lumpur</span></div>
-      <div class="detail-row"><span class="dl">Time</span><span class="dv">3:30 pm &nbsp; ROM (optional)<br>7:00 pm &nbsp; Dinner Reception</span></div>
+      <div class="detail-row"><span class="dl">Time</span><span class="dv"><span class="time-list"><span class="time">3.30pm</span><span class="event">ROM &amp; Tea Ceremony</span><span class="time">7.00pm</span><span class="event">Dinner Reception</span></span></span></div>
     </div>
     <div class="btn-row">
       <button class="btn gold" onclick="goTo('p3')">Will be attending</button>
@@ -411,13 +422,12 @@ input, select, textarea, .fi {
       </div>
     </div>
     <div class="itin-title">Wedding Itinerary</div>
-    <p class="venue-note">@ M Resort</p>
     <div class="itinerary">
-      <div class="itin-row"><span class="itin-time">3:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">ROM Ceremony</div><div class="itin-venue">Bukit Tunku Room &middot; Level 9</div></div></div>
-      <div class="itin-row"><span class="itin-time">5:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Tea Ceremony</div><div class="itin-venue">Bukit Tunku Room &middot; Level 9</div></div></div>
-      <div class="itin-row"><span class="itin-time">6:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Cocktail Reception</div><div class="itin-venue">Grand Ballroom</div></div></div>
-      <div class="itin-row"><span class="itin-time">7:00pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Dinner</div><div class="itin-venue">Grand Ballroom</div></div></div>
-      <div class="itin-row"><span class="itin-time">10:00pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">After Party</div><div class="itin-venue">Grand Ballroom</div></div></div>
+      <div class="itin-row"><span class="itin-time">3:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">ROM Ceremony</div><div class="itin-venue">M Resort - Bukit Tunku Room (Level 9)</div></div></div>
+      <div class="itin-row"><span class="itin-time">5:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Tea Ceremony</div><div class="itin-venue">M Resort - Bukit Tunku Room (Level 9)</div></div></div>
+      <div class="itin-row"><span class="itin-time">6:30pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Cocktail Reception</div><div class="itin-venue">President Ballroom @ M Resort</div></div></div>
+      <div class="itin-row"><span class="itin-time">7:00pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">Dinner</div><div class="itin-venue">President Ballroom @ M Resort</div></div></div>
+      <div class="itin-row"><span class="itin-time">10:00pm</span><div class="itin-dot"></div><div class="itin-info"><div class="itin-label">After Party</div><div class="itin-venue">President Ballroom @ M Resort</div></div></div>
     </div>
     <button class="btn gold" onclick="goTo('p5')">Our Memories</button>
   </div>
@@ -443,17 +453,16 @@ input, select, textarea, .fi {
     <p class="gallery-title gallery-header" id="ght">Moments Along the Way</p>
     <div class="gallery-grid">
       <div class="g-pop" data-gi="0" onclick="openLb(0)"><img data-photo-key="gallery_on_the_slopes" alt=""/><div class="g-label">On the slopes</div></div>
-      <div class="g-pop" data-gi="1" onclick="openLb(1)"><img data-photo-key="gallery_alpine_adventures" alt=""/><div class="g-label">Alpine adventures</div></div>
-      <div class="g-pop" data-gi="2" onclick="openLb(2)"><img data-photo-key="gallery_bali_night" alt=""/><div class="g-label">Bali night</div></div>
-      <div class="g-pop" data-gi="3" onclick="openLb(3)"><img data-photo-key="gallery_balloon_turkey" alt=""/><div class="g-label">Balloon Turkey</div></div>
-      <div class="g-pop" data-gi="4" onclick="openLb(4)"><img data-photo-key="gallery_birthday_celebration" alt=""/><div class="g-label">Celebrations</div></div>
-      <div class="g-pop" data-gi="5" onclick="openLb(5)"><img data-photo-key="gallery_concert_night" alt=""/><div class="g-label">Live concert</div></div>
-      <div class="g-pop" data-gi="6" onclick="openLb(6)"><img data-photo-key="gallery_disneysea" alt=""/><div class="g-label">DisneySea</div></div>
-      <div class="g-pop" data-gi="7" onclick="openLb(7)"><img data-photo-key="gallery_she_said_yes" alt=""/><div class="g-label">She said yes</div></div>
-      <div class="g-pop" data-gi="8" onclick="openLb(8)"><img data-photo-key="gallery_shibuya_sky" alt=""/><div class="g-label">Shibuya Sky</div></div>
-      <div class="g-pop" data-gi="9" onclick="openLb(9)"><img data-photo-key="gallery_tassie_adventures" alt=""/><div class="g-label">Tassie adventures</div></div>
-      <div class="g-pop" data-gi="10" onclick="openLb(10)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
-      <div class="gallery-footer g-pop" data-gi="11"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
+      <div class="g-pop" data-gi="1" onclick="openLb(1)"><img data-photo-key="gallery_bali_night" alt=""/><div class="g-label">Bali night</div></div>
+      <div class="g-pop" data-gi="2" onclick="openLb(2)"><img data-photo-key="gallery_balloon_turkey" alt=""/><div class="g-label">Balloon Turkey</div></div>
+      <div class="g-pop" data-gi="3" onclick="openLb(3)"><img data-photo-key="gallery_birthday_celebration" alt=""/><div class="g-label">Birthday celebration during Covid-19</div></div>
+      <div class="g-pop" data-gi="4" onclick="openLb(4)"><img data-photo-key="gallery_concert_night" alt=""/><div class="g-label">Live concert</div></div>
+      <div class="g-pop" data-gi="5" onclick="openLb(5)"><img data-photo-key="gallery_disneysea" alt=""/><div class="g-label">DisneySea</div></div>
+      <div class="g-pop" data-gi="6" onclick="openLb(6)"><img data-photo-key="gallery_she_said_yes" alt=""/><div class="g-label">She said yes</div></div>
+      <div class="g-pop" data-gi="7" onclick="openLb(7)"><img data-photo-key="gallery_shibuya_sky" alt=""/><div class="g-label">Shibuya Sky</div></div>
+      <div class="g-pop" data-gi="8" onclick="openLb(8)"><img data-photo-key="gallery_tassie_adventures" alt=""/><div class="g-label">Tassie adventures</div></div>
+      <div class="g-pop" data-gi="9" onclick="openLb(9)"><img data-photo-key="gallery_winter_in_japan" alt=""/><div class="g-label">Winter in Japan</div></div>
+      <div class="gallery-footer g-pop" data-gi="10"><button class="btn gold" onclick="goTo('p6')">Continue</button></div>
     </div>
   </div>
 </div>
@@ -502,7 +511,6 @@ const assetBindings = {
   background_pg5: { selector: '[data-bg-key="background_pg5"]', type: 'background' },
   background_pg6: { selector: '[data-bg-key="background_pg6"]', type: 'background' },
   gallery_on_the_slopes: { selector: '[data-photo-key="gallery_on_the_slopes"]', type: 'image' },
-  gallery_alpine_adventures: { selector: '[data-photo-key="gallery_alpine_adventures"]', type: 'image' },
   gallery_bali_night: { selector: '[data-photo-key="gallery_bali_night"]', type: 'image' },
   gallery_balloon_turkey: { selector: '[data-photo-key="gallery_balloon_turkey"]', type: 'image' },
   gallery_birthday_celebration: { selector: '[data-photo-key="gallery_birthday_celebration"]', type: 'image' },
@@ -741,10 +749,12 @@ function goTo(id){
     setTimeout(()=>{
       document.querySelectorAll('.gallery-header').forEach(el=>el.classList.add('show'));
     },1500);
-    const items=document.querySelectorAll('.g-pop');
-    items.forEach((el,i)=>{
+    const photos=document.querySelectorAll('#p5 .gallery-grid .g-pop:not(.gallery-footer)');
+    photos.forEach((el,i)=>{
       setTimeout(()=>el.classList.add('show'), 1850 + i*280);
     });
+    const footer=document.querySelector('#p5 .gallery-footer');
+    if(footer) setTimeout(()=>footer.classList.add('show'), 1850 + photos.length*280);
   } else {
     const c=next.querySelector('.content,.gallery-wrap');
     if(c){c.style.animation='none';c.offsetHeight;c.style.animation='';}
@@ -768,8 +778,17 @@ function buildGuests(){
 
     const dWrap=document.createElement('div');dWrap.className='dietary-wrap';
     const sel=document.createElement('select');sel.className='fi';
-    ['None','Vegetarian','Others'].forEach(v=>{
-      const o=document.createElement('option');o.textContent=v;sel.appendChild(o);
+    [
+      {text:'Dietary requirements:-',value:'',disabled:true,selected:true},
+      {text:'None',value:'None'},
+      {text:'Vegetarian',value:'Vegetarian'},
+      {text:'Others (We will reach out!)',value:'Others'}
+    ].forEach(v=>{
+      const o=document.createElement('option');
+      o.textContent=v.text;o.value=v.value;
+      if(v.disabled)o.disabled=true;
+      if(v.selected)o.selected=true;
+      sel.appendChild(o);
     });
     const othInp=document.createElement('input');
     othInp.className='others-input fi';othInp.placeholder='Please specify dietary requirement…';othInp.type='text';
@@ -833,7 +852,7 @@ async function submitAttend(){
     const other=row.querySelector('.others-input');
     const dietary=diet&&diet.value==='Others'&&other&&other.value.trim()
       ? other.value.trim()
-      : (diet?diet.value:'None');
+      : (diet&&diet.value?diet.value:'None');
     guests.push({name:name?name.value.trim():'',dietary});
   });
 
@@ -858,7 +877,7 @@ async function submitAttend(){
   launchConfetti();
   const vp=document.querySelector('meta[name=viewport]');
   if(vp){vp.content='width=device-width,initial-scale=1,maximum-scale=1';setTimeout(()=>{vp.content='width=device-width,initial-scale=1,viewport-fit=cover';},300);}
-  setTimeout(()=>goTo('p4'),3000);
+  setTimeout(()=>goTo('p4'),1500);
 }
 
 async function submitDecline(){
@@ -919,10 +938,9 @@ updateCD();setInterval(updateCD,1000);
 // LIGHTBOX
 const lbData=[
   {key:'gallery_on_the_slopes',cap:'On the slopes'},
-  {key:'gallery_alpine_adventures',cap:'Alpine adventures'},
   {key:'gallery_bali_night',cap:'Bali night'},
   {key:'gallery_balloon_turkey',cap:'Balloon Turkey'},
-  {key:'gallery_birthday_celebration',cap:'Celebrations'},
+  {key:'gallery_birthday_celebration',cap:'Birthday celebration during Covid-19'},
   {key:'gallery_concert_night',cap:'Live concert'},
   {key:'gallery_disneysea',cap:'DisneySea'},
   {key:'gallery_she_said_yes',cap:'She said yes'},
