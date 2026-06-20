@@ -200,6 +200,53 @@ Deno.serve(async (req) => {
     const submissionId = isUuid(requestedSubmissionId) ? requestedSubmissionId : crypto.randomUUID()
     const submittedAt = new Date().toISOString()
     const submittedGuests = guests.length ? guests : [{ name: '', dietary: 'N/A' }]
+    const duplicateWindowStart = new Date(Date.now() - 2 * 60 * 1000).toISOString()
+    const emailValue = response?.email || null
+    const attendanceTypeValue = status === 'attending' ? attendanceType : null
+    let recentQuery = supabase
+      .from('wedding_rsvps')
+      .select('submission_id, guest_name, dietary, guest_index')
+      .eq('passkey', cleanPasskey)
+      .eq('status', status)
+      .gte('submitted_at', duplicateWindowStart)
+      .order('submitted_at', { ascending: false })
+
+    recentQuery = emailValue ? recentQuery.eq('email', emailValue) : recentQuery.is('email', null)
+    recentQuery = attendanceTypeValue ? recentQuery.eq('attendance_type', attendanceTypeValue) : recentQuery.is('attendance_type', null)
+
+    const { data: recentRsvps, error: recentError } = await recentQuery
+
+    if (recentError) throw recentError
+
+    const expectedSignature = submittedGuests
+      .map((guest, index) => [
+        index + 1,
+        String(guest?.name || '').trim(),
+        String(guest?.dietary || 'N/A').trim(),
+      ].join('|'))
+      .sort()
+      .join('||')
+    const recentBySubmission = new Map<string, Array<Record<string, unknown>>>()
+    ;(recentRsvps || []).forEach((row) => {
+      const existingSubmissionId = String(row.submission_id || '')
+      if (!existingSubmissionId) return
+      recentBySubmission.set(existingSubmissionId, [...(recentBySubmission.get(existingSubmissionId) || []), row])
+    })
+    for (const rows of recentBySubmission.values()) {
+      if (rows.length !== submittedGuests.length) continue
+      const recentSignature = rows
+        .map((row) => [
+          row.guest_index,
+          String(row.guest_name || '').trim(),
+          String(row.dietary || 'N/A').trim(),
+        ].join('|'))
+        .sort()
+        .join('||')
+      if (recentSignature === expectedSignature) {
+        return json({ ok: true, duplicateIgnored: true, emailConfirmation: { sent: false, reason: 'Duplicate submission ignored.' } })
+      }
+    }
+
     const rsvpRows = submittedGuests.map((guest, index) => {
       const guestName = String(guest?.name || '').trim()
       const dietary = String(guest?.dietary || 'N/A').trim()

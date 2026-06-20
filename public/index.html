@@ -883,6 +883,11 @@ buildGuests();
 
 async function submitAttend(){
   if(attendSubmitInFlight) return;
+  attendSubmitInFlight=true;
+  if(attendSubmitBtn){
+    attendSubmitBtn.disabled=true;
+    attendSubmitBtn.textContent='Checking';
+  }
   if(document.activeElement) document.activeElement.blur();
   window.scrollTo(0,0);
   const errEl=document.getElementById('errMsg');
@@ -938,20 +943,23 @@ async function submitAttend(){
   }
 
   if(errs.length){
+    attendSubmitInFlight=false;
+    if(attendSubmitBtn){
+      attendSubmitBtn.disabled=false;
+      attendSubmitBtn.textContent='Confirm Attendance';
+    }
     errEl.textContent='please fill up all compulsory fields';
     errEl.style.display='block';
     updateAttendButtonState();
     return;
   }
 
-  attendSubmitInFlight=true;
   activeAttendSubmissionId=activeAttendSubmissionId||(
     window.crypto&&window.crypto.randomUUID
       ? window.crypto.randomUUID()
       : String(Date.now())+'-'+Math.random().toString(16).slice(2)
   );
   if(attendSubmitBtn){
-    attendSubmitBtn.disabled=true;
     attendSubmitBtn.textContent='Submitting';
   }
 
