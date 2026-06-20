@@ -30,21 +30,21 @@ create table if not exists public.wedding_invite_events (
 create table if not exists public.wedding_rsvps (
   id bigint generated always as identity primary key,
   invite_id uuid references public.wedding_invites(id) on delete set null,
-  submission_id uuid,
   passkey text not null,
-  status text not null check (status in ('attending','declined')),
-  email text,
-  attendance_type text check (attendance_type is null or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')),
   guest_name text,
+  status text not null check (status in ('attending','declined')),
+  attendance_type text check (attendance_type is null or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')),
   dietary text,
+  email text,
+  submission_id uuid,
   guest_index integer,
   guests jsonb not null default '[]'::jsonb,
   message text,
-  confirmation_email_sent_at timestamptz,
-  confirmation_email_error text,
   user_agent text,
   page_path text,
-  submitted_at timestamptz not null default now()
+  submitted_at timestamptz not null default now(),
+  confirmation_email_sent_at timestamptz,
+  confirmation_email_error text
 );
 
 alter table public.wedding_rsvps
@@ -85,27 +85,6 @@ where guests is not null;
 alter table public.wedding_invites enable row level security;
 alter table public.wedding_invite_events enable row level security;
 alter table public.wedding_rsvps enable row level security;
-
-create or replace view public.wedding_rsvps_ordered as
-select
-  id,
-  invite_id,
-  submission_id,
-  passkey,
-  guest_name,
-  status,
-  attendance_type,
-  dietary,
-  email,
-  guest_index,
-  guests,
-  message,
-  confirmation_email_sent_at,
-  confirmation_email_error,
-  user_agent,
-  page_path,
-  submitted_at
-from public.wedding_rsvps;
 
 -- No public browser policies are added intentionally.
 -- Edge Functions use the service role key to read/write these tables privately.
