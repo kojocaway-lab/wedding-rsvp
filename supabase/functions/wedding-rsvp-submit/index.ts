@@ -67,6 +67,12 @@ function makeIcs(passkey: string) {
   ].join('\r\n')
 }
 
+const allowedAttendanceTypes = [
+  'Wedding banquet only',
+  'Wedding banquet + ROM',
+  'ROM only',
+]
+
 function emailHtml(guestLabel: string, guests: Array<Record<string, unknown>>, links: ReturnType<typeof makeCalendarLinks>) {
   const guestRows = guests
     .map((guest) => {
@@ -171,11 +177,24 @@ Deno.serve(async (req) => {
     }
 
     const status = response?.status === 'declined' ? 'declined' : 'attending'
+    if (status === 'attending' && guests.length < 1) {
+      return json({ ok: false, error: 'Please select the number of pax.' }, 400)
+    }
+    if (status === 'attending' && guests.some((guest) => !String(guest?.dietary || '').trim())) {
+      return json({ ok: false, error: 'Please select dietary requirements for each guest.' }, 400)
+    }
+
+    const attendanceType = String(response?.attendanceType || '').trim()
+    if (status === 'attending' && !allowedAttendanceTypes.includes(attendanceType)) {
+      return json({ ok: false, error: 'Please select which event you will be attending.' }, 400)
+    }
+
     const { data: savedRsvp, error } = await supabase.from('wedding_rsvps').insert({
       invite_id: invite.id,
       passkey: cleanPasskey,
       status,
       email: response?.email || null,
+      attendance_type: status === 'attending' ? attendanceType : null,
       guests,
       message: response?.message || null,
       user_agent: userAgent || null,

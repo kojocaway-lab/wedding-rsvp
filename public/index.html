@@ -115,8 +115,8 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
   backdrop-filter:blur(4px);
 }
 .fi::placeholder{color:rgba(255,255,255,0.42);letter-spacing:1px;}
-#guestCount{width:100%;margin-bottom:4px;background:rgba(0,0,0,0.35)!important;}
-#guestCount option,.dietary-wrap select option{background:#111!important;color:#fff!important;}
+#guestCount,#attendanceType{width:100%;margin-bottom:4px;background:rgba(0,0,0,0.35)!important;}
+#guestCount option,#attendanceType option,.dietary-wrap select option{background:#111!important;color:#fff!important;}
 .guest-row{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}
 .guest-row-top{display:flex;gap:8px;}
 .guest-row-top .name-input{flex:1;}
@@ -398,10 +398,16 @@ input, select, textarea, .fi {
     <h2>We&rsquo;d love to see you there!</h2>
     <div class="form-group">
       <select id="guestCount" class="fi" onchange="buildGuests()"></select>
+      <select id="attendanceType" class="fi" onchange="updateAttendButtonState()">
+        <option value="" disabled selected>Will you be attending:-</option>
+        <option value="Wedding banquet only">Wedding banquet only</option>
+        <option value="Wedding banquet + ROM">Wedding banquet + ROM</option>
+        <option value="ROM only">ROM only</option>
+      </select>
       <div id="guestBox"></div>
     </div>
     <div id="errMsg" class="err-msg" style="display:none;"></div>
-    <button class="btn gold" onclick="submitAttend()">Confirm Attendance</button>
+    <button class="btn gold" id="attendSubmitBtn" onclick="submitAttend()" disabled>Confirm Attendance</button>
     <p class="msg-ok" id="attendMsg"></p>
   </div>
 </div>
@@ -769,11 +775,36 @@ function goTo(id){
 
 // GUEST FORM
 const gc=document.getElementById('guestCount');
+const attendanceType=document.getElementById('attendanceType');
+const attendSubmitBtn=document.getElementById('attendSubmitBtn');
+const guestCountPlaceholder=document.createElement('option');
+guestCountPlaceholder.value='';
+guestCountPlaceholder.textContent='Number of pax';
+guestCountPlaceholder.disabled=true;
+guestCountPlaceholder.selected=true;
+gc.appendChild(guestCountPlaceholder);
 for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=i;o.textContent=i+(i===1?' guest':' guests');gc.appendChild(o);}
+
+function updateAttendButtonState(){
+  if(!attendSubmitBtn) return;
+  const guestCount=parseInt(gc.value);
+  const dietarySelects=[...document.querySelectorAll('#guestBox .dietary-wrap select')];
+  const dietaryReady=guestCount>0&&dietarySelects.length===guestCount&&dietarySelects.every((sel)=>{
+    const other=sel.parentElement?sel.parentElement.querySelector('.others-input'):null;
+    return !!sel.value&&(sel.value!=='Others'||!!(other&&other.value.trim()));
+  });
+  attendSubmitBtn.disabled=!(guestCount>0&&attendanceType&&attendanceType.value&&dietaryReady);
+}
+
+if(attendanceType){
+  attendanceType.addEventListener('change',()=>{attendanceType.style.borderColor='';updateAttendButtonState();});
+}
 
 function buildGuests(){
   const box=document.getElementById('guestBox');box.innerHTML='';
   const n=parseInt(gc.value);
+  if(n) gc.style.borderColor='';
+  if(!n){updateAttendButtonState();return;}
   for(let i=0;i<n;i++){
     const wrapper=document.createElement('div');wrapper.className='guest-row';
     const topRow=document.createElement('div');topRow.className='guest-row-top';
@@ -798,7 +829,8 @@ function buildGuests(){
     });
     const othInp=document.createElement('input');
     othInp.className='others-input fi';othInp.placeholder='Please specify dietary requirement…';othInp.type='text';
-    sel.addEventListener('change',()=>{othInp.classList.toggle('show',sel.value==='Others');sel.classList.remove('err');});
+    sel.addEventListener('change',()=>{othInp.classList.toggle('show',sel.value==='Others');sel.classList.remove('err');updateAttendButtonState();});
+    othInp.addEventListener('input',()=>{othInp.style.borderColor='';updateAttendButtonState();});
     dWrap.appendChild(sel);dWrap.appendChild(othInp);
     topRow.appendChild(nameInp);topRow.appendChild(dWrap);
     wrapper.appendChild(topRow);
@@ -813,6 +845,7 @@ function buildGuests(){
     }
     box.appendChild(wrapper);
   }
+  updateAttendButtonState();
 }
 buildGuests();
 
@@ -825,6 +858,20 @@ async function submitAttend(){
   const errEl=document.getElementById('errMsg');
   errEl.style.display='none';
   const errs=[];
+  const guestCount=parseInt(gc.value);
+  if(!guestCount){
+    gc.style.borderColor='#e07070';
+    errs.push('guestCount');
+  } else {
+    gc.style.borderColor='';
+  }
+
+  if(!attendanceType||!attendanceType.value){
+    if(attendanceType) attendanceType.style.borderColor='#e07070';
+    errs.push('attendanceType');
+  } else {
+    attendanceType.style.borderColor='';
+  }
 
   const emailInp=document.getElementById('guestEmail');
   if(emailInp&&!emailInp.value.trim()){
@@ -840,12 +887,34 @@ async function submitAttend(){
     else inp.style.borderColor='';
   });
 
+  document.querySelectorAll('#guestBox .guest-row').forEach((row)=>{
+    const diet=row.querySelector('select');
+    const other=row.querySelector('.others-input');
+    if(!diet||!diet.value){
+      if(diet) diet.classList.add('err');
+      errs.push('dietary');
+    } else {
+      diet.classList.remove('err');
+    }
+    if(diet&&diet.value==='Others'&&other&&!other.value.trim()){
+      other.style.borderColor='#e07070';
+      errs.push('dietaryOther');
+    } else if(other) {
+      other.style.borderColor='';
+    }
+  });
+
   if(errs.length){
     const msgs=[];
+    if(errs.includes('guestCount')) msgs.push('Please select the number of pax.');
+    if(errs.includes('attendanceType')) msgs.push('Please select which event you will be attending.');
     if(errs.includes('email')) msgs.push('Please provide your email — we\'ll use it to send details closer to the date.');
-    if(errs.includes('name')) msgs.push('Please enter a.0 name for each guest.');
+    if(errs.includes('name')) msgs.push('Please enter a name for each guest.');
+    if(errs.includes('dietary')) msgs.push('Please select dietary requirements for each guest.');
+    if(errs.includes('dietaryOther')) msgs.push('Please specify the dietary requirement marked as Others.');
     errEl.textContent=msgs.join(' ');
     errEl.style.display='block';
+    updateAttendButtonState();
     return;
   }
 
@@ -865,6 +934,7 @@ async function submitAttend(){
   const payload={
     status:'attending',
     email:emailInp?emailInp.value.trim():'',
+    attendanceType:attendanceType?attendanceType.value:'',
     guests
   };
 

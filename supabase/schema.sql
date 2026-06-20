@@ -33,6 +33,7 @@ create table if not exists public.wedding_rsvps (
   passkey text not null,
   status text not null check (status in ('attending','declined')),
   email text,
+  attendance_type text check (attendance_type is null or attendance_type in ('Wedding banquet only','Wedding banquet + ROM','ROM only')),
   guests jsonb not null default '[]'::jsonb,
   message text,
   confirmation_email_sent_at timestamptz,
@@ -44,7 +45,18 @@ create table if not exists public.wedding_rsvps (
 
 alter table public.wedding_rsvps
   add column if not exists confirmation_email_sent_at timestamptz,
-  add column if not exists confirmation_email_error text;
+  add column if not exists confirmation_email_error text,
+  add column if not exists attendance_type text;
+
+alter table public.wedding_rsvps
+  drop constraint if exists wedding_rsvps_attendance_type_check;
+
+alter table public.wedding_rsvps
+  add constraint wedding_rsvps_attendance_type_check
+  check (
+    attendance_type is null
+    or attendance_type in ('Wedding banquet only','Wedding banquet + ROM','ROM only')
+  );
 
 alter table public.wedding_invites enable row level security;
 alter table public.wedding_invite_events enable row level security;
