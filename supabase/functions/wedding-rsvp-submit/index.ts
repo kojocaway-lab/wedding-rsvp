@@ -73,6 +73,10 @@ const allowedAttendanceTypes = [
   'ROM only (3.30pm)',
 ]
 
+function isUuid(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+}
+
 function emailHtml(guestLabel: string, guests: Array<Record<string, unknown>>, links: ReturnType<typeof makeCalendarLinks>) {
   const guestRows = guests
     .map((guest) => {
@@ -192,7 +196,8 @@ Deno.serve(async (req) => {
       return json({ ok: false, error: 'Please select dietary requirements for each guest.' }, 400)
     }
 
-    const submissionId = crypto.randomUUID()
+    const requestedSubmissionId = String(response?.submissionId || '').trim()
+    const submissionId = isUuid(requestedSubmissionId) ? requestedSubmissionId : crypto.randomUUID()
     const submittedAt = new Date().toISOString()
     const submittedGuests = guests.length ? guests : [{ name: '', dietary: 'N/A' }]
     const rsvpRows = submittedGuests.map((guest, index) => {
@@ -218,7 +223,7 @@ Deno.serve(async (req) => {
 
     const { data: savedRsvps, error } = await supabase
       .from('wedding_rsvps')
-      .insert(rsvpRows)
+      .upsert(rsvpRows, { onConflict: 'submission_id,guest_index' })
       .select('id')
 
     if (error) throw error

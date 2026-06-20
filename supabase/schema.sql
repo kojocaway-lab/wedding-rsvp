@@ -82,6 +82,13 @@ set
   guest_index = coalesce(guest_index, 1)
 where guests is not null;
 
+alter table public.wedding_rsvps
+  drop constraint if exists wedding_rsvps_submission_guest_index_key;
+
+alter table public.wedding_rsvps
+  add constraint wedding_rsvps_submission_guest_index_key
+  unique (submission_id, guest_index);
+
 alter table public.wedding_invites enable row level security;
 alter table public.wedding_invite_events enable row level security;
 alter table public.wedding_rsvps enable row level security;

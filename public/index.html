@@ -787,6 +787,8 @@ function goTo(id){
 const gc=document.getElementById('guestCount');
 const attendanceType=document.getElementById('attendanceType');
 const attendSubmitBtn=document.getElementById('attendSubmitBtn');
+let attendSubmitInFlight=false;
+let activeAttendSubmissionId='';
 const guestCountPlaceholder=document.createElement('option');
 guestCountPlaceholder.value='';
 guestCountPlaceholder.textContent='Number of pax';
@@ -797,7 +799,7 @@ for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=i;o.text
 
 function updateAttendButtonState(){
   if(!attendSubmitBtn) return;
-  attendSubmitBtn.disabled=false;
+  attendSubmitBtn.disabled=!!attendSubmitInFlight;
 }
 
 if(attendanceType){
@@ -880,6 +882,7 @@ buildGuests();
 
 
 async function submitAttend(){
+  if(attendSubmitInFlight) return;
   if(document.activeElement) document.activeElement.blur();
   window.scrollTo(0,0);
   const errEl=document.getElementById('errMsg');
@@ -941,6 +944,17 @@ async function submitAttend(){
     return;
   }
 
+  attendSubmitInFlight=true;
+  activeAttendSubmissionId=activeAttendSubmissionId||(
+    window.crypto&&window.crypto.randomUUID
+      ? window.crypto.randomUUID()
+      : String(Date.now())+'-'+Math.random().toString(16).slice(2)
+  );
+  if(attendSubmitBtn){
+    attendSubmitBtn.disabled=true;
+    attendSubmitBtn.textContent='Submitting';
+  }
+
   // Collect guest data
   const guestRows=document.querySelectorAll('#guestBox .guest-row');
   const guests=[];
@@ -958,6 +972,7 @@ async function submitAttend(){
 
   const payload={
     status:'attending',
+    submissionId:activeAttendSubmissionId,
     email:emailInp?emailInp.value.trim():'',
     attendanceType:attendanceType?attendanceType.value:'',
     guests
@@ -967,6 +982,12 @@ async function submitAttend(){
   try{
     submitResult = await submitRsvp(payload);
   }catch(e){
+    attendSubmitInFlight=false;
+    activeAttendSubmissionId='';
+    if(attendSubmitBtn){
+      attendSubmitBtn.disabled=false;
+      attendSubmitBtn.textContent='Confirm Attendance';
+    }
     errEl.textContent=e.message || 'Unable to save your RSVP. Please try again.';
     errEl.style.display='block';
     return;
