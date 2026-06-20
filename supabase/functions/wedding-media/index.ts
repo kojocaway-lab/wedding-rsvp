@@ -32,8 +32,11 @@ const PHOTO_PATHS: Record<string, string[]> = {
   background_pg6_desktop: backgroundVariantPaths('background_pg6_desktop'),
   background_pg6_mobile: backgroundVariantPaths('background_pg6_mobile'),
   gallery_on_the_slopes: [
+    'gallery_rsvp/lightbox_on_the_slopes.jpeg',
     'gallery_rsvp/lightbox_on_the_slopes.jpg',
+    'gallery/on_the_slopes.jpeg',
     'gallery/on_the_slopes.jpg',
+    'lightbox_on_the_slopes.jpeg',
     'lightbox_on_the_slopes.jpg',
   ],
   gallery_alpine_adventures: [
