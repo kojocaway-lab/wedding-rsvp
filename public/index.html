@@ -122,6 +122,7 @@ h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(24
 .guest-row-top{display:flex;gap:8px;}
 .guest-row-top .name-input{flex:1;}
 .dietary-wrap{display:flex;flex-direction:column;gap:5px;width:180px;flex-shrink:0;}
+.dietary-wrap.disabled{opacity:.55;}
 .dietary-wrap select{
   width:100%;padding:12px 10px;border-radius:12px;
   border:1px solid rgba(255,255,255,0.18);
@@ -401,14 +402,14 @@ input, select, textarea, .fi {
       <select id="guestCount" class="fi" onchange="buildGuests()"></select>
       <select id="attendanceType" class="fi" onchange="updateAttendButtonState()">
         <option value="" disabled selected>Will you be attending:-</option>
-        <option value="Wedding banquet only">Wedding banquet only</option>
+        <option value="Wedding Banquet only (7pm)">Wedding Banquet only (7pm)</option>
         <option value="Wedding banquet + ROM">Wedding banquet + ROM</option>
-        <option value="ROM only">ROM only</option>
+        <option value="ROM only (3.30pm)">ROM only (3.30pm)</option>
       </select>
       <div id="guestBox"></div>
     </div>
     <div id="errMsg" class="err-msg" style="display:none;"></div>
-    <button class="btn gold" id="attendSubmitBtn" onclick="submitAttend()" disabled>Confirm Attendance</button>
+    <button class="btn gold" id="attendSubmitBtn" onclick="submitAttend()">Confirm Attendance</button>
     <p class="msg-ok" id="attendMsg"></p>
   </div>
 </div>
@@ -788,17 +789,33 @@ for(let i=1;i<=10;i++){const o=document.createElement('option');o.value=i;o.text
 
 function updateAttendButtonState(){
   if(!attendSubmitBtn) return;
-  const guestCount=parseInt(gc.value);
-  const dietarySelects=[...document.querySelectorAll('#guestBox .dietary-wrap select')];
-  const dietaryReady=guestCount>0&&dietarySelects.length===guestCount&&dietarySelects.every((sel)=>{
-    const other=sel.parentElement?sel.parentElement.querySelector('.others-input'):null;
-    return !!sel.value&&(sel.value!=='Others'||!!(other&&other.value.trim()));
-  });
-  attendSubmitBtn.disabled=!(guestCount>0&&attendanceType&&attendanceType.value&&dietaryReady);
+  attendSubmitBtn.disabled=false;
 }
 
 if(attendanceType){
-  attendanceType.addEventListener('change',()=>{attendanceType.style.borderColor='';updateAttendButtonState();});
+  attendanceType.addEventListener('change',()=>{attendanceType.style.borderColor='';syncDietaryRequirementState();updateAttendButtonState();});
+}
+
+function syncDietaryRequirementState(){
+  const romOnly=attendanceType&&attendanceType.value==='ROM only (3.30pm)';
+  document.querySelectorAll('#guestBox .dietary-wrap').forEach((wrap)=>{
+    const sel=wrap.querySelector('select');
+    const other=wrap.querySelector('.others-input');
+    wrap.classList.toggle('disabled',!!romOnly);
+    if(sel){
+      sel.disabled=!!romOnly;
+      sel.classList.remove('err');
+      if(romOnly) sel.value='';
+    }
+    if(other){
+      other.disabled=!!romOnly;
+      other.style.borderColor='';
+      if(romOnly){
+        other.value='';
+        other.classList.remove('show');
+      }
+    }
+  });
 }
 
 function buildGuests(){
@@ -846,6 +863,7 @@ function buildGuests(){
     }
     box.appendChild(wrapper);
   }
+  syncDietaryRequirementState();
   updateAttendButtonState();
 }
 buildGuests();
@@ -888,32 +906,28 @@ async function submitAttend(){
     else inp.style.borderColor='';
   });
 
-  document.querySelectorAll('#guestBox .guest-row').forEach((row)=>{
-    const diet=row.querySelector('select');
-    const other=row.querySelector('.others-input');
-    if(!diet||!diet.value){
-      if(diet) diet.classList.add('err');
-      errs.push('dietary');
-    } else {
-      diet.classList.remove('err');
-    }
-    if(diet&&diet.value==='Others'&&other&&!other.value.trim()){
-      other.style.borderColor='#e07070';
-      errs.push('dietaryOther');
-    } else if(other) {
-      other.style.borderColor='';
-    }
-  });
+  const romOnly=attendanceType&&attendanceType.value==='ROM only (3.30pm)';
+  if(!romOnly){
+    document.querySelectorAll('#guestBox .guest-row').forEach((row)=>{
+      const diet=row.querySelector('select');
+      const other=row.querySelector('.others-input');
+      if(!diet||!diet.value){
+        if(diet) diet.classList.add('err');
+        errs.push('dietary');
+      } else {
+        diet.classList.remove('err');
+      }
+      if(diet&&diet.value==='Others'&&other&&!other.value.trim()){
+        other.style.borderColor='#e07070';
+        errs.push('dietaryOther');
+      } else if(other) {
+        other.style.borderColor='';
+      }
+    });
+  }
 
   if(errs.length){
-    const msgs=[];
-    if(errs.includes('guestCount')) msgs.push('Please select the number of pax.');
-    if(errs.includes('attendanceType')) msgs.push('Please select which event you will be attending.');
-    if(errs.includes('email')) msgs.push('Please provide your email — we\'ll use it to send details closer to the date.');
-    if(errs.includes('name')) msgs.push('Please enter a name for each guest.');
-    if(errs.includes('dietary')) msgs.push('Please select dietary requirements for each guest.');
-    if(errs.includes('dietaryOther')) msgs.push('Please specify the dietary requirement marked as Others.');
-    errEl.textContent=msgs.join(' ');
+    errEl.textContent='please fill up all compulsory fields';
     errEl.style.display='block';
     updateAttendButtonState();
     return;
@@ -926,7 +940,9 @@ async function submitAttend(){
     const name=row.querySelector('.name-input');
     const diet=row.querySelector('select');
     const other=row.querySelector('.others-input');
-    const dietary=diet&&diet.value==='Others'&&other&&other.value.trim()
+    const dietary=romOnly
+      ? 'N/A'
+      : diet&&diet.value==='Others'&&other&&other.value.trim()
       ? other.value.trim()
       : (diet&&diet.value?diet.value:'None');
     guests.push({name:name?name.value.trim():'',dietary});

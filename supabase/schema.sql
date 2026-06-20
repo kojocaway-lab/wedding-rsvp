@@ -33,7 +33,7 @@ create table if not exists public.wedding_rsvps (
   passkey text not null,
   status text not null check (status in ('attending','declined')),
   email text,
-  attendance_type text check (attendance_type is null or attendance_type in ('Wedding banquet only','Wedding banquet + ROM','ROM only')),
+  attendance_type text check (attendance_type is null or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')),
   guests jsonb not null default '[]'::jsonb,
   message text,
   confirmation_email_sent_at timestamptz,
@@ -51,11 +51,19 @@ alter table public.wedding_rsvps
 alter table public.wedding_rsvps
   drop constraint if exists wedding_rsvps_attendance_type_check;
 
+update public.wedding_rsvps
+set attendance_type = case attendance_type
+  when 'Wedding banquet only' then 'Wedding Banquet only (7pm)'
+  when 'ROM only' then 'ROM only (3.30pm)'
+  else attendance_type
+end
+where attendance_type in ('Wedding banquet only','ROM only');
+
 alter table public.wedding_rsvps
   add constraint wedding_rsvps_attendance_type_check
   check (
     attendance_type is null
-    or attendance_type in ('Wedding banquet only','Wedding banquet + ROM','ROM only')
+    or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')
   );
 
 alter table public.wedding_invites enable row level security;
