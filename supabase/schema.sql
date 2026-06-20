@@ -86,5 +86,26 @@ alter table public.wedding_invites enable row level security;
 alter table public.wedding_invite_events enable row level security;
 alter table public.wedding_rsvps enable row level security;
 
+create or replace view public.wedding_rsvps_ordered as
+select
+  id,
+  invite_id,
+  submission_id,
+  passkey,
+  guest_name,
+  status,
+  attendance_type,
+  dietary,
+  email,
+  guest_index,
+  guests,
+  message,
+  confirmation_email_sent_at,
+  confirmation_email_error,
+  user_agent,
+  page_path,
+  submitted_at
+from public.wedding_rsvps;
+
 -- No public browser policies are added intentionally.
 -- Edge Functions use the service role key to read/write these tables privately.

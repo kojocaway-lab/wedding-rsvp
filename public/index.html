@@ -53,8 +53,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0b08;}
 h1{font-family:'Tangerine',cursive;font-size:65px;line-height:1.05;color:rgba(247,240,228,0.85);margin-bottom:8px;}
 h2{font-family:'Tangerine',cursive;font-size:28px;line-height:1.45;color:rgba(247,240,228,0.82);margin-bottom:14px;}
 .gallery-title{font-family:'Tangerine',cursive;font-size:28px;color:rgba(247,240,228,0.82);text-align:center;margin-bottom:14px;}
-.itin-title{font-family:'Tangerine',cursive;font-size:38px;font-weight:700;color:rgba(247,240,228,0.92);margin:0 0 2px 78px;text-align:left;text-shadow:var(--strong-text-shadow);}
-.itin-title .itin-title-sub{display:block;}
+.itin-title{font-family:'Tangerine',cursive;font-size:38px;font-weight:700;color:rgba(247,240,228,0.92);margin:0 0 2px;text-align:center;text-shadow:var(--strong-text-shadow);}
+.itin-title .itin-title-sub{display:block;font-size:.7em;}
 .final-name{font-family:'Tangerine',cursive;font-size:58px;color:rgba(247,240,228,0.88);margin-bottom:10px;}
 
 /* ── BODY TEXT ────────────────────────── */
@@ -403,8 +403,8 @@ input, select, textarea, .fi {
       <select id="attendanceType" class="fi" onchange="updateAttendButtonState()">
         <option value="" disabled selected>Will you be attending:-</option>
         <option value="Wedding Banquet only (7pm)">Wedding Banquet only (7pm)</option>
-        <option value="Wedding banquet + ROM">Wedding banquet + ROM</option>
         <option value="ROM only (3.30pm)">ROM only (3.30pm)</option>
+        <option value="Wedding banquet + ROM">Wedding banquet + ROM</option>
       </select>
       <div id="guestBox"></div>
     </div>
