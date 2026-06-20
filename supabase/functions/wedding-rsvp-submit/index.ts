@@ -192,17 +192,34 @@ Deno.serve(async (req) => {
       return json({ ok: false, error: 'Please select dietary requirements for each guest.' }, 400)
     }
 
-    const { data: savedRsvp, error } = await supabase.from('wedding_rsvps').insert({
-      invite_id: invite.id,
-      passkey: cleanPasskey,
-      status,
-      email: response?.email || null,
-      attendance_type: status === 'attending' ? attendanceType : null,
-      guests,
-      message: response?.message || null,
-      user_agent: userAgent || null,
-      page_path: path || null,
-    }).select('id').single()
+    const submissionId = crypto.randomUUID()
+    const submittedAt = new Date().toISOString()
+    const submittedGuests = guests.length ? guests : [{ name: '', dietary: 'N/A' }]
+    const rsvpRows = submittedGuests.map((guest, index) => {
+      const guestName = String(guest?.name || '').trim()
+      const dietary = String(guest?.dietary || 'N/A').trim()
+      return {
+        invite_id: invite.id,
+        submission_id: submissionId,
+        passkey: cleanPasskey,
+        status,
+        email: response?.email || null,
+        attendance_type: status === 'attending' ? attendanceType : null,
+        guest_name: guestName || null,
+        dietary: dietary || null,
+        guest_index: index + 1,
+        guests: [guest],
+        message: response?.message || null,
+        user_agent: userAgent || null,
+        page_path: path || null,
+        submitted_at: submittedAt,
+      }
+    })
+
+    const { data: savedRsvps, error } = await supabase
+      .from('wedding_rsvps')
+      .insert(rsvpRows)
+      .select('id')
 
     if (error) throw error
 
@@ -229,7 +246,7 @@ Deno.serve(async (req) => {
       await supabase.from('wedding_rsvps').update({
         confirmation_email_sent_at: emailConfirmation.sent ? new Date().toISOString() : null,
         confirmation_email_error: emailConfirmation.sent ? null : emailConfirmation.reason || 'Email was not sent.',
-      }).eq('id', savedRsvp.id)
+      }).in('id', (savedRsvps || []).map((rsvp) => rsvp.id))
     }
 
     return json({ ok: true, emailConfirmation })

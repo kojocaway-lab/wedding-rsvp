@@ -30,10 +30,14 @@ create table if not exists public.wedding_invite_events (
 create table if not exists public.wedding_rsvps (
   id bigint generated always as identity primary key,
   invite_id uuid references public.wedding_invites(id) on delete set null,
+  submission_id uuid,
   passkey text not null,
   status text not null check (status in ('attending','declined')),
   email text,
   attendance_type text check (attendance_type is null or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')),
+  guest_name text,
+  dietary text,
+  guest_index integer,
   guests jsonb not null default '[]'::jsonb,
   message text,
   confirmation_email_sent_at timestamptz,
@@ -46,7 +50,11 @@ create table if not exists public.wedding_rsvps (
 alter table public.wedding_rsvps
   add column if not exists confirmation_email_sent_at timestamptz,
   add column if not exists confirmation_email_error text,
-  add column if not exists attendance_type text;
+  add column if not exists attendance_type text,
+  add column if not exists submission_id uuid,
+  add column if not exists guest_name text,
+  add column if not exists dietary text,
+  add column if not exists guest_index integer;
 
 alter table public.wedding_rsvps
   drop constraint if exists wedding_rsvps_attendance_type_check;
@@ -65,6 +73,14 @@ alter table public.wedding_rsvps
     attendance_type is null
     or attendance_type in ('Wedding Banquet only (7pm)','Wedding banquet + ROM','ROM only (3.30pm)')
   );
+
+update public.wedding_rsvps
+set
+  submission_id = coalesce(submission_id, gen_random_uuid()),
+  guest_name = coalesce(guest_name, nullif(guests->0->>'name', '')),
+  dietary = coalesce(dietary, nullif(guests->0->>'dietary', '')),
+  guest_index = coalesce(guest_index, 1)
+where guests is not null;
 
 alter table public.wedding_invites enable row level security;
 alter table public.wedding_invite_events enable row level security;
